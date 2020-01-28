@@ -90,8 +90,7 @@ void Render();
 // Entry point to the program. Initializes everything and goes into a message processing 
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
-int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
-{
+int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow ) {
     UNREFERENCED_PARAMETER( hPrevInstance );
     UNREFERENCED_PARAMETER( lpCmdLine );
 
@@ -204,8 +203,7 @@ HRESULT InitDevice() {
     GetClientRect( g_hWnd, &rc );
     UINT width = rc.right - rc.left;
     UINT height = rc.bottom - rc.top;
-	//Camera.setWidth(rc.right - rc.left);
-	//Camera.setHeight(rc.bottom - rc.top);
+	
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -511,17 +509,26 @@ HRESULT InitDevice() {
 	
 	// Initialize the view matrix
 	
+	
+
+	CamDesc.pos = { 0.0f, 3.0f, -6.0f };
+	CamDesc.lAt = { 0.0f, 1.0f, 0.0f };
+	CamDesc.up_Desc = { 0.0f, 1.0f, 0.0f };
+
+	CamDesc.W = (rc.right - rc.left);
+	CamDesc.H = (rc.bottom - rc.top);
+	CamDesc.Near = (0.001f);
+	CamDesc.Far = (1000.0f);
+	CamDesc.Fov = (XM_PIDIV4);
+	 
+
 	Camera.init(CamDesc);
-	Camera.setWidth(rc.right - rc.left);
-	Camera.setHeight(rc.bottom - rc.top);
-	Camera.setNear(0.01f);
-	Camera.setFar(1000.0f);
-	Camera.setFov(/*XM_PIDIV4*/ 359.f);
+	
 
 	g_View = Camera.getVM();
 	
 	CBNeverChanges cbNeverChanges;
-	cbNeverChanges.mView = transpose(g_View);
+	cbNeverChanges.mView = g_View;
 	g_pImmediateContext->UpdateSubresource(g_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0);
 
 	// Initialize the projection matrix

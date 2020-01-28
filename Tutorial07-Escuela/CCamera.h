@@ -1,5 +1,5 @@
 /**
-* @LC		: 24/01/2020
+* @LC		: 26/01/2020
 * @file		: CCamera.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -50,8 +50,6 @@ private:
 	
 
 	CCameraDesc Desc;
-	
-	vec3 EyeDirection;
 	
 public:
 	

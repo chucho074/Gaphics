@@ -22,9 +22,7 @@ CCamera::CCamera() {
 	front = {0.0f,0.0f,0.0f};
 	up = { 0.0f,0.0f,0.0f };
 	right = { 0.0f,0.0f,0.0f };
-	EyeDirection = {0.f,0.f,0.f};
-
-
+	
 }
 
 /**
@@ -43,10 +41,8 @@ CCamera::~CCamera() {
 **/
 int CCamera::init(CCameraDesc cam) {
 	Desc = cam;
-	Desc.pos = { 0.0f, 3.0f, -6.0f };
-	Desc.lAt = { 0.0f, -1.0f, 0.0f };
-	Desc.up_Desc = { 0.0f, 1.0f, 0.0f };
-
+	
+	
 	front = { (getlAt(Desc) - getPos(Desc)) };	//z
 	right = { (cross(getUp(Desc),(front))) };	//x
 	up = { (cross(front,right)) };				//y
@@ -57,7 +53,7 @@ int CCamera::init(CCameraDesc cam) {
 	up  = normalize(up);
 	
 	updateVM();
-
+	updatePM();
 	return 0;
 }
 
@@ -110,23 +106,7 @@ void CCamera::move(vec3 Tras) {
 * @bug		: No Bugs known.
 **/
 mat4 CCamera::ViewMatrixCreate() {
-	Axis = { right.x, right.y, right.z, 0,
-				up.x, up.y, up.z, 0,
-				front.x, front.y, front.z, 0,
-				0,		0,			0,	1 };
-
-	Pos = { 1,0,0,-getPos(Desc).x,
-			0,1,0,-getPos(Desc).y,
-			0,0,1,-getPos(Desc).z,
-			0,0,0,1 };
-
-	Pos *= Axis;		//Crear matriz vista
-
-	mat4 M;
-
-
-	M = Pos;
-	return M;
+return glm::lookAtLH(Desc.pos, Desc.lAt, Desc.up_Desc);
 }
 
 /**
