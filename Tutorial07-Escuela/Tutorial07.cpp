@@ -197,71 +197,70 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 // Create Direct3D device and swap chain
 //--------------------------------------------------------------------------------------
 HRESULT InitDevice() {
-    HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    RECT rc;
-    GetClientRect( g_hWnd, &rc );
-    UINT width = rc.right - rc.left;
-    UINT height = rc.bottom - rc.top;
-	
+	RECT rc;
+	GetClientRect(g_hWnd, &rc);
+	UINT width = rc.right - rc.left;
+	UINT height = rc.bottom - rc.top;
 
-    UINT createDeviceFlags = 0;
+
+	UINT createDeviceFlags = 0;
 #ifdef _DEBUG
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-    D3D_DRIVER_TYPE driverTypes[] =
-    {
-        D3D_DRIVER_TYPE_HARDWARE,
-        D3D_DRIVER_TYPE_WARP,
-        D3D_DRIVER_TYPE_REFERENCE,
-    };
-    UINT numDriverTypes = ARRAYSIZE( driverTypes );
+	D3D_DRIVER_TYPE driverTypes[] =
+	{
+		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_WARP,
+		D3D_DRIVER_TYPE_REFERENCE,
+	};
+	UINT numDriverTypes = ARRAYSIZE(driverTypes);
 
-    D3D_FEATURE_LEVEL featureLevels[] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-    };
-    UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+	D3D_FEATURE_LEVEL featureLevels[] =
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+	};
+	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory( &sd, sizeof( sd ) );
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = width;
-    sd.BufferDesc.Height = height;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = g_hWnd;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
+	DXGI_SWAP_CHAIN_DESC sd;
+	ZeroMemory(&sd, sizeof(sd));
+	sd.BufferCount = 1;
+	sd.BufferDesc.Width = width;
+	sd.BufferDesc.Height = height;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.OutputWindow = g_hWnd;
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
+	sd.Windowed = TRUE;
 
-    for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
-    {
-        g_driverType = driverTypes[driverTypeIndex];
-        hr = D3D11CreateDeviceAndSwapChain( NULL, g_driverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
-                                            D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext );
-        if( SUCCEEDED( hr ) )
-            break;
-    }
-    if( FAILED( hr ) )
-        return hr;
+	for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++) {
+		g_driverType = driverTypes[driverTypeIndex];
+		hr = D3D11CreateDeviceAndSwapChain(NULL, g_driverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
+			D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext);
+		if (SUCCEEDED(hr))
+			break;
+	}
+	if (FAILED(hr))
+		return hr;
 
-    // Create a render target view
-    ID3D11Texture2D* pBackBuffer = NULL;
-    hr = g_pSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&pBackBuffer );
-    if( FAILED( hr ) )
-        return hr;
-
-    hr = g_pd3dDevice->CreateRenderTargetView( pBackBuffer, NULL, &g_pRenderTargetView );
-    pBackBuffer->Release();
-    if( FAILED( hr ) )
-        return hr;
-
+	// Create a render target view
+	ID3D11Texture2D* pBackBuffer = NULL;
+	hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	if (FAILED(hr)) {
+		return hr;
+	}
+	hr = g_pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &g_pRenderTargetView);
+	pBackBuffer->Release();
+	if (FAILED(hr)) {
+		return hr;
+	}
     // Create depth stencil texture
     D3D11_TEXTURE2D_DESC descDepth;
     ZeroMemory( &descDepth, sizeof(descDepth) );
@@ -512,7 +511,7 @@ HRESULT InitDevice() {
 	
 
 	CamDesc.pos = { 0.0f, 3.0f, -6.0f };
-	CamDesc.lAt = { 0.0f, 1.0f, 0.0f };
+	CamDesc.lAt = { 0.0f, 0.0f, 0.0f };
 	CamDesc.up_Desc = { 0.0f, 1.0f, 0.0f };
 
 	CamDesc.W = (rc.right - rc.left);
@@ -659,30 +658,73 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 
 		case WM_KEYDOWN: {
 			if (wParam == VK_UP) {
-				vec3 moving = {0.f,0.f,5.f};
+				vec3 moving = {0.f,0.f,0.1f};
 				Camera.move(moving);
+				
 			}
 			else if (wParam == VK_DOWN) {
-				vec3 moving = { 0.f,0.f,-5.f };
+				vec3 moving = { 0.f,0.f,-0.1f };
 				Camera.move(moving);
 			}
 			else if (wParam == VK_RIGHT) {
-				vec3 moving = { 5.f,0.f,0.f };
+				vec3 moving = { 0.1f,0.f,0.f };
 				Camera.move(moving);
 			}
 			else if (wParam == VK_LEFT) {
-				vec3 moving = { -5.f,0.f,0.f };
+				vec3 moving = { -0.1f,0.f,0.f };
 				Camera.move(moving);
 			}
 			
 			if (wParam == 'E' || wParam == 'e') {
-				vec3 moving = { 0.f,-5.f,0.f };
+				vec3 moving = { 0.f,-0.1f,0.f };
 				Camera.move(moving);
 			}
 			else if (wParam == 'Q' || wParam =='q') {
-				vec3 moving = { 0.f,5.f,0.f };
+				vec3 moving = { 0.f, 0.1f, 0.f };
 				Camera.move(moving);
 			}
+			else if (wParam == 'Z' || wParam == 'z') {
+				Camera.rotRoll(5.f);
+			}
+			else if (wParam == 'X' || wParam == 'x') {
+				Camera.rotPitch(5.f);
+			}
+			else if (wParam == 'C' || wParam == 'c') {
+				Camera.rotYaw(5.f);
+			}
+			CBNeverChanges cbNeverChanges;
+			cbNeverChanges.mView = Camera.getVM();
+
+			g_pImmediateContext->UpdateSubresource(g_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0);
+			break;
+		}
+		case WM_LBUTTONDOWN: {
+			POINT Mouse;
+			GetCursorPos(&Mouse);
+			Camera.PosIn = { float(Mouse.x), float(Mouse.y), 0 };
+			Camera.Fpres = true;
+			break;
+		}
+		case WM_MOUSEMOVE: {
+			if (Camera.Fpres == true) {
+				POINT MOUSE;
+				GetCursorPos(&MOUSE);
+				Camera.PosFn = { float(MOUSE.x),float(MOUSE.y), 0 };
+				SetCursorPos(Camera.PosIn.x, Camera.PosIn.y);
+
+				Camera.Dir = Camera.PosIn - Camera.PosFn;
+				
+				Camera.MoveMouse(Camera.Dir);
+				CBNeverChanges cbNeverChanges;
+				cbNeverChanges.mView = Camera.getVM();//XMMatrixTranspose( g_View );
+				g_pImmediateContext->UpdateSubresource(g_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0);
+
+			}
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			Camera.Fpres = false;
 		}
 
         default:
@@ -735,22 +777,44 @@ void Render() {
     // Update variables that change once per frame
     //
     CBChangesEveryFrame cb;
-    cb.mWorld =  g_World;
-    cb.vMeshColor = g_vMeshColor;
-    g_pImmediateContext->UpdateSubresource( g_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0 );
+	//for (int i = 0; i < 20; i++) {
+		//g_World = translate(g_World, {i*2,0,0});
+		cb.mWorld = g_World;
+		cb.vMeshColor = g_vMeshColor;
+		g_pImmediateContext->UpdateSubresource(g_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0);
 
-    //
-    // Render the cube
-    //
-    g_pImmediateContext->VSSetShader( g_pVertexShader, NULL, 0 );
-    g_pImmediateContext->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
-    g_pImmediateContext->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
-    g_pImmediateContext->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
-    g_pImmediateContext->PSSetShader( g_pPixelShader, NULL, 0 );
-    g_pImmediateContext->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
-    g_pImmediateContext->PSSetShaderResources( 0, 1, &g_pTextureRV );
-    g_pImmediateContext->PSSetSamplers( 0, 1, &g_pSamplerLinear );
-    g_pImmediateContext->DrawIndexed( 36, 0, 0 );
+		//
+		// Render the cube
+		//
+		g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
+		g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pCBNeverChanges);
+		g_pImmediateContext->VSSetConstantBuffers(1, 1, &g_pCBChangeOnResize);
+		g_pImmediateContext->VSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
+		g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
+		g_pImmediateContext->PSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
+		g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTextureRV);
+		g_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
+		g_pImmediateContext->DrawIndexed(36, 0, 0);
+		
+	//}
+	/*
+	//SEGUNDA CAJA Y TRANSLADARLA
+	g_World = translate(g_World, { -3.f, 0.f, 0.f });
+	cb.mWorld = transpose(g_World);
+	cb.vMeshColor = g_vMeshColor;
+	g_pImmediateContext->UpdateSubresource(g_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0);
+
+
+	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
+	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pCBNeverChanges);
+	g_pImmediateContext->VSSetConstantBuffers(1, 1, &g_pCBChangeOnResize);
+	g_pImmediateContext->VSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
+	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
+	g_pImmediateContext->PSSetConstantBuffers(2, 1, &g_pCBChangesEveryFrame);
+	g_pImmediateContext->PSSetShaderResources(0, 1, &g_pTextureRV);
+	g_pImmediateContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
+	g_pImmediateContext->DrawIndexed(36, 0, 0);
+	*/
 
 
 

@@ -1,5 +1,5 @@
 /**
-* @LC		: 26/01/2020
+* @LC		: 29/01/2020
 * @file		: CCamera.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -42,16 +42,15 @@ CCamera::~CCamera() {
 int CCamera::init(CCameraDesc cam) {
 	Desc = cam;
 	
-	
 	front = { (getlAt(Desc) - getPos(Desc)) };	//z
 	right = { (cross(getUp(Desc),(front))) };	//x
 	up = { (cross(front,right)) };				//y
-	
-	
+
 	front = normalize(front);
 	right = normalize(right);
-	up  = normalize(up);
-	
+	up = normalize(up);
+
+	//VM = lookAtLH(Desc.pos,Desc.lAt,Desc.up_Desc);
 	updateVM();
 	updatePM();
 	return 0;
@@ -63,8 +62,11 @@ int CCamera::init(CCameraDesc cam) {
 **/
 void CCamera::updateVM() {
 
+	right = { VM[0][0], VM[0][1], VM[0][2] };
+	up = { VM[1][0], VM[1][1], VM[1][2] };
+	front = { VM[2][0], VM[2][1], VM[2][2] };
+	//Desc.lAt = front + Desc.pos;
 	VM = ViewMatrixCreate();
-	
 }
 
 /**
@@ -82,11 +84,41 @@ void CCamera::updatePM() {
 **/
 void CCamera::rotPitch(float RotX) {
 	
-	mat4 Rot;
-	rotate(Rot,RotX,front);
-	VM = (VM * Rot);
+	//mat4 Rot (1.f);
+	VM = rotate(VM, RotX, {0, 1, 0});
+	//M = (VM * Rot);
 	updateVM();
 	
+}
+
+/**
+* @brief	: Rotation in Y (Yaw).
+* @param	: The angle.
+* @bug		: No Bugs known.
+**/
+void CCamera::rotYaw(float RotY) {
+
+	//mat4 Rot(1.f);
+	VM = rotate(VM, RotY, {1,0,0});
+	//VM *= Rot;
+	updateVM();
+	
+
+}
+
+/**
+* @brief	: Rotation in Z (Rol).
+* @param	: The angle.
+* @bug		: No Bugs known.
+**/
+void CCamera::rotRoll(float RotZ) {
+
+	//mat4 Rot (1.f);
+	VM = rotate(VM, RotZ, {0, 0, 1});
+	//VM = (VM * Rot);
+	updateVM();
+	
+
 }
 
 /**
@@ -95,9 +127,11 @@ void CCamera::rotPitch(float RotX) {
 * @bug		: No Bugs known.
 **/
 void CCamera::move(vec3 Tras) {
-	Desc.pos += (right * Tras.x);
-	Desc.pos += (up * Tras.y);
-	Desc.pos += (front * Tras.z);
+	Desc.pos += (right	* Tras.x);
+	Desc.pos += (up		* Tras.y);
+	Desc.pos += (front	* Tras.z);
+	
+	VM = lookAt(Desc.pos, Desc.lAt, Desc.up_Desc);
 	updateVM();
 }
 
@@ -106,7 +140,8 @@ void CCamera::move(vec3 Tras) {
 * @bug		: No Bugs known.
 **/
 mat4 CCamera::ViewMatrixCreate() {
-return glm::lookAtLH(Desc.pos, Desc.lAt, Desc.up_Desc);
+	
+	return translate(mat4(1.f),-Desc.pos);
 }
 
 /**
@@ -240,3 +275,51 @@ mat4 CCamera::getPM() {
 	return PM;
 }
 
+
+void CCamera::MoveMouse(vec3 Dir) {
+	RotMouse(Dir);
+	updateVM();
+	
+}
+
+void CCamera::RotMouse(vec3 Dir) {
+	RotMouseX(Dir);
+	updateVM();
+	RotMouseY(Dir);
+	VM = ViewMatrixCreate();
+}
+
+
+void CCamera::RotMouseX(vec3 Dir) {
+	float cosine = cosf(Dir.x / 100);
+	float sine = sinf(Dir.x / 100);
+	mat4 rot;
+	//float speed = 0.10f;
+	rot = {
+		cosine,	0.0f,	sine,	0.0f,
+		0.0f, 1.0f,	0.0f, 0.0f,
+		-sine,   0.0f,	cosine,	0.0f,
+		0.0f, 0.0f,   0.0f,			1.0f
+	};
+	VM *= rot;
+	
+	
+	//updateVM();
+}
+
+
+void CCamera::RotMouseY(vec3 Dir)
+{
+	float cosine = cosf(Dir.y / 100);
+	float sine = sinf(Dir.y / 100);
+	mat4 rot;
+	rot = {
+			 1.0f, 0.0f,  0.0f, 0.0f,
+			0.0f,  cosine, -sine, 0.0f,
+			0.0f,  sine,  cosine, 0.0f,
+			0.0f,    0.0f,   0.0f, 1.0f
+	};
+	VM *= rot;
+	//updateVM();
+	VM = ViewMatrixCreate();
+}

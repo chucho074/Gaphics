@@ -1,5 +1,5 @@
 /**
-* @LC		: 26/01/2020
+* @LC		: 29/01/2020
 * @file		: CCamera.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -39,15 +39,19 @@ class CCamera {
 public: 
 	CCamera();
 	~CCamera();
-private:
+
 	vec3 front;
 	vec3 up;
 	vec3 right;
 	mat4 VM;
 	mat4 PM;
-	mat4 Axis;
-	mat4 Pos;
+	/*mat4 Axis;
+	mat4 Pos;*/
 	
+	bool Fpres;
+	vec3 PosIn;
+	vec3 PosFn;
+	vec3 Dir;
 
 	CCameraDesc Desc;
 	
@@ -58,6 +62,8 @@ public:
 	void updatePM();
 	void move(vec3);
 	void rotPitch(float);
+	void rotYaw(float);
+	void rotRoll(float);
 	void setPos(vec3 posCam);
 	void setlAt(vec3 posCam);
 	void setUp(vec3 posCam);
@@ -76,4 +82,9 @@ public:
 
 	mat4 ViewMatrixCreate();
 	mat4 PerspectiveMatrixFovLH(float, float, float, float);
+	
+	void MoveMouse(vec3);
+	void RotMouse(vec3);
+	void RotMouseX(vec3);
+	void RotMouseY(vec3);
 };
