@@ -18,14 +18,14 @@
 
 /**
 * Headers
-*/
+**/
 
 
 /* >>>FOR A BRIEF<<< */
 
 /**
 * @brief	: This is a brief comment :)
-*/
+**/
 
 
 /* >>>FOR FUNCTIONS<<< */
@@ -38,3 +38,4 @@
 
 
 
+//	No Bugs known.

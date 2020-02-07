@@ -12,12 +12,36 @@
       <UniqueIdentifier>{2c3d4c8c-5d1a-459a-a05a-a4e4b608a44e}</UniqueIdentifier>
       <Extensions>fx;fxh;hlsl</Extensions>
     </Filter>
+    <Filter Include="cpps">
+      <UniqueIdentifier>{dcf7198d-b9ba-4a73-86fe-76d5c8ad7e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hs">
+      <UniqueIdentifier>{683e17c7-b428-441f-a59a-a981aa21eaec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Tutorial07.cpp" />
-    <ClCompile Include="CCamera.cpp" />
-    <ClCompile Include="CVector3.cpp" />
-    <ClCompile Include="CVector4.cpp" />
+    <ClCompile Include="CCamera.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial07.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CDeviceContext.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CBuffer.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CDevice.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CSwapChain.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CIndexBuffer.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial07.fx">
@@ -31,35 +55,28 @@
     <ResourceCompile Include="Tutorial07.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ClInclude Include="CCamera.h" />
-    <ClInclude Include="CommentShit.h" />
-    <ClInclude Include="Includes.h" />
-    <ClInclude Include="MathHelper.h" />
-    <ClInclude Include="CVector3.h" />
-    <ClInclude Include="CVector4.h" />
-    <ClInclude Include="glm\glm\common.hpp" />
-    <ClInclude Include="glm\glm\exponential.hpp" />
-    <ClInclude Include="glm\glm\ext.hpp" />
-    <ClInclude Include="glm\glm\fwd.hpp" />
-    <ClInclude Include="glm\glm\geometric.hpp" />
-    <ClInclude Include="glm\glm\glm.hpp" />
-    <ClInclude Include="glm\glm\integer.hpp" />
-    <ClInclude Include="glm\glm\mat2x2.hpp" />
-    <ClInclude Include="glm\glm\mat2x3.hpp" />
-    <ClInclude Include="glm\glm\mat2x4.hpp" />
-    <ClInclude Include="glm\glm\mat3x2.hpp" />
-    <ClInclude Include="glm\glm\mat3x3.hpp" />
-    <ClInclude Include="glm\glm\mat3x4.hpp" />
-    <ClInclude Include="glm\glm\mat4x2.hpp" />
-    <ClInclude Include="glm\glm\mat4x3.hpp" />
-    <ClInclude Include="glm\glm\mat4x4.hpp" />
-    <ClInclude Include="glm\glm\matrix.hpp" />
-    <ClInclude Include="glm\glm\packing.hpp" />
-    <ClInclude Include="glm\glm\trigonometric.hpp" />
-    <ClInclude Include="glm\glm\vec2.hpp" />
-    <ClInclude Include="glm\glm\vec3.hpp" />
-    <ClInclude Include="glm\glm\vec4.hpp" />
-    <ClInclude Include="glm\glm\vector_relational.hpp" />
+    <ClInclude Include="CCamera.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffer.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CDevice.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CDeviceContext.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CommentShit.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CSwapChain.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CIndexBuffer.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

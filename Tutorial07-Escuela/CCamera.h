@@ -1,90 +1,109 @@
 /**
-* @LC		: 29/01/2020
+* @LC		: 07/02/2020
 * @file		: CCamera.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
-* @date		: 15/01/2020
-* @brief	: This class have all about the camera.
-* @bug		: No Bugs.
+* @date		: 07/02/2020
+* @brief	: A basic description of the what do the doc.
+* @bug		: No Bugs known.
 **/
+
 
 /**
 * Headers
-*/
+**/
 #pragma once
-#include "Includes.h"
+#include <windows.h>
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <d3dcompiler.h>
+#include <xnamath.h>
+#include "resource.h"
+
 
 /**
-* @brief	: Struct for every camera.
-* @bug		: No Bugs.
-*/
-struct CCameraDesc {
-	
-	vec3 pos;
-	vec3 lAt;
-	vec3 up_Desc; //Del mundo
-	float W = 0.f;
-	float H = 0.f;
-	float Fov = 0.f;
-	float Near = 0.f;
-	float Far = 0.f;
-
+* @brief	: Short description of function.
+* @param	: Parameter descriptor.
+* @bug		: Bug description.
+**/
+struct DescCamera {
+	XMVECTOR pos;
+	XMVECTOR lAt;
+	XMVECTOR up_Desc; //Del mundo
+	FLOAT W = 0.f;
+	FLOAT H = 0.f;
+	FLOAT Fov = 0.f;
+	FLOAT Near = 0.f;
+	FLOAT Far = 0.f;
 };
 
 /**
-* @brief	: The main class for the camera.
-* @bug		: No Bugs.
-*/
+* @brief	: Short description of function.
+* @param	: Parameter descriptor.
+* @bug		: Bug description.
+**/
 class CCamera {
-public: 
+public:
+	/**
+	* @brief	: Constructor of the class.
+	* @bug		: No Bugs known.
+	**/
 	CCamera();
+
+	/**
+	* @brief	: Destroy of the class.
+	* @bug		: No Bugs known.
+	**/
 	~CCamera();
 
-	vec3 front;
-	vec3 up;
-	vec3 right;
-	mat4 VM;
-	mat4 PM;
-	/*mat4 Axis;
-	mat4 Pos;*/
-	
-	bool Fpres;
-	vec3 PosIn;
-	vec3 PosFn;
-	vec3 Dir;
+	/**
+	* @brief	: Initializer.
+	* @param	: Needs a Camera Description.
+	* @bug		: No Bugs known.
+	**/
+	int init(DescCamera);
 
-	CCameraDesc Desc;
-	
+private:
+	DescCamera DescCam;
+
+	XMFLOAT3 Front;
+	XMFLOAT3 Right;
+	XMFLOAT3 Up;
+
+	XMMATRIX PM;
+	XMMATRIX VM;
+
 public:
-	
-	int init(CCameraDesc cam);
-	void updateVM();
-	void updatePM();
-	void move(vec3);
-	void rotPitch(float);
-	void rotYaw(float);
-	void rotRoll(float);
-	void setPos(vec3 posCam);
-	void setlAt(vec3 posCam);
-	void setUp(vec3 posCam);
-	void setWidth(float);
-	void setHeight(float);
-	void setFov(float);
-	void setNear(float);
-	void setFar(float);
 
-	vec3 getPos(CCameraDesc);
-	vec3 getlAt(CCameraDesc);
-	vec3 getUp(CCameraDesc);
+	/**
+	* @brief	: Getter for the Projection Matrix.
+	* @bug		: No Bugs known.
+	**/
+	XMMATRIX getPM();
 
-	mat4 getVM();
-	mat4 getPM();
+	/**
+	* @brief	: Getter for the View Matrix.
+	* @bug		: No Bugs known.
+	**/
+	XMMATRIX getVM();
 
-	mat4 ViewMatrixCreate();
-	mat4 PerspectiveMatrixFovLH(float, float, float, float);
-	
-	void MoveMouse(vec3);
-	void RotMouse(vec3);
-	void RotMouseX(vec3);
-	void RotMouseY(vec3);
+	/**
+	* @brief	: Create the Projection Matrix.
+	* @bug		: Can't use it 4 create de PM, have a error from the Lib.
+	**/
+	void createPM();
+
+	/**
+	* @brief	: Create the View Matrix.
+	* @bug		: No Bugs known.
+	**/
+	void createVM();
+
+	/**
+	* @brief	: Move the VM.
+	* @param	: .
+	* @bug		: No Bugs known.
+	**/
+	void move(XMFLOAT3);
 };
+
