@@ -27,10 +27,19 @@ CIndexBuffer::~CIndexBuffer() {
 }
 
 
-int CIndexBuffer::init() {
+int CIndexBuffer::init(DescBuffer inDesc) {
+	IndexDB = inDesc;
 	OrigBuffer.init();
-	OrigBuffer.setDataDesc(sizeof(WORD) * 36, D3D11_BIND_INDEX_BUFFER);
-
+	OrigBuffer.setDataDesc(IndexDB);
 
 	return 0;
+}
+
+
+D3D11_BUFFER_DESC CIndexBuffer::getBD() {
+	return OrigBuffer.getBD();
+}
+
+ID3D11Buffer *&CIndexBuffer::getB() {
+	return OrigBuffer.getDX11Buffer();
 }

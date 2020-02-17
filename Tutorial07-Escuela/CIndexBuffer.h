@@ -16,38 +16,45 @@
 #include "CBuffer.h"
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: Class for Index Buffer.
+* @bug		: No Bugs known.
 **/
 class CIndexBuffer {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Constructor.
+	* @bug		: No Bug known.
 	**/
 	CIndexBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CIndexBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Init of the class.
+	* @param	: DescBuffer.
+	* @bug		: No Bugs known.
 	**/
-	int init();
+	int init(DescBuffer);
+
+	/**
+	* @brief	: Returns the DX11 Buffer Description.
+	* @bug		: No Bugs known.
+	**/
+	D3D11_BUFFER_DESC getBD();
+
+	/**
+	* @brief	: Returns the Buffer.
+	* @bug		: No Bugs known.
+	**/
+	ID3D11Buffer *&getB();
 
 private:
-
+	DescBuffer IndexDB;
 	CBuffer OrigBuffer;
-
-
-
+	   
 };
 

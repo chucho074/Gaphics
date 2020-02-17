@@ -25,6 +25,27 @@
 * @param	: Parameter descriptor.
 * @bug		: Bug description.
 **/
+struct DescSwapChain {
+	
+	UINT W;
+	UINT H;
+	HWND hWnd;
+	UINT numerator;
+	UINT denominator;
+	UINT BufferCount;
+	HWND OutputWindow;
+	BOOL Windowed;
+	UINT count;
+	UINT quality;
+	DXGI_FORMAT Format;
+};
+
+
+/**
+* @brief	: Short description of function.
+* @param	: Parameter descriptor.
+* @bug		: Bug description.
+**/
 class CSwapChain {
 public:
 	/**
@@ -46,7 +67,7 @@ public:
 	* @param	: Parameter descriptor.
 	* @bug		: Bug description.
 	**/
-	int init();
+	int init(DescSwapChain);
 
 	/**
 	* @brief	: Short description of function.
@@ -96,5 +117,6 @@ private:
 	UINT W;
 	UINT H;
 	HWND hWnd;
+	DescSwapChain Desc;
 };
 

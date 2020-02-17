@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 12/02/2020
 * @file		: CVertexBuffer.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -27,9 +27,19 @@ CVertexBuffer::~CVertexBuffer() {
 }
 
 
-int CVertexBuffer::init() {
+int CVertexBuffer::init(DescBuffer inDesc) {
+	VertexBD = inDesc;
 	OrigBuffer.init();
-	OrigBuffer.setDataDesc(sizeof(SimpleVertex) * 24, D3D11_BIND_VERTEX_BUFFER);
-
+	OrigBuffer.setDataDesc(VertexBD);
+	
 	return 0;
+}
+
+
+D3D11_BUFFER_DESC CVertexBuffer::getBD() {
+	return OrigBuffer.getBD();
+}
+
+ID3D11Buffer *& CVertexBuffer::getB() {
+	return OrigBuffer.getDX11Buffer();
 }

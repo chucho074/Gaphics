@@ -20,15 +20,22 @@
 #include "CBuffer.h"
 #include "CIndexBuffer.h"
 #include "CVertexBuffer.h"
-
+#include "CConstantBuffer.h"
+#include "CTexture2D.h"
+#include "CDepthStencil.h"
+#include "CDepthStencilView.h"
+#include "CRenderTarget.h"
+#include "CRenderTargetView.h"
+#include "CSamplerState.h"
 
 //--------------------------------------------------------------------------------------
 // Structures
 //--------------------------------------------------------------------------------------
-//struct SimpleVertex {
-//    XMFLOAT3 Pos;
-//    XMFLOAT2 Tex;
-//};
+
+struct SimpleVertex {
+    XMFLOAT3 Pos;
+    XMFLOAT2 Tex;
+};
 
 struct CBNeverChanges {
     XMMATRIX mView;
@@ -54,29 +61,40 @@ D3D_FEATURE_LEVEL                   g_featureLevel = D3D_FEATURE_LEVEL_11_0;
 //ID3D11Device*                       g_pd3dDevice = NULL;
 //ID3D11DeviceContext*                g_pImmediateContext = NULL;
 //IDXGISwapChain*                     g_pSwapChain = NULL;
-ID3D11RenderTargetView*             g_pRenderTargetView = NULL;
-ID3D11Texture2D*                    g_pDepthStencil = NULL;
-ID3D11DepthStencilView*             g_pDepthStencilView = NULL;
+//ID3D11RenderTargetView*             g_pRenderTargetView = NULL;
+//ID3D11Texture2D*                    g_pDepthStencil = NULL;
+//ID3D11DepthStencilView*             g_pDepthStencilView = NULL;
 ID3D11VertexShader*                 g_pVertexShader = NULL;
 ID3D11PixelShader*                  g_pPixelShader = NULL;
 ID3D11InputLayout*                  g_pVertexLayout = NULL;
-ID3D11Buffer*                       g_pVertexBuffer = NULL;
-ID3D11Buffer*                       g_pIndexBuffer = NULL;
-ID3D11Buffer*                       g_pCBNeverChanges = NULL;
-ID3D11Buffer*                       g_pCBChangeOnResize = NULL;
-ID3D11Buffer*                       g_pCBChangesEveryFrame = NULL;
+//ID3D11Buffer*                       g_pVertexBuffer = NULL;
+//ID3D11Buffer*                       g_pIndexBuffer = NULL;
+//ID3D11Buffer*                       g_pCBNeverChanges = NULL;
+//ID3D11Buffer*                       g_pCBChangeOnResize = NULL;
+//ID3D11Buffer*                       g_pCBChangesEveryFrame = NULL;
 ID3D11ShaderResourceView*           g_pTextureRV = NULL;
-ID3D11SamplerState*                 g_pSamplerLinear = NULL;
+//ID3D11SamplerState*                 g_pSamplerLinear = NULL;
 XMMATRIX                            g_World;
 XMMATRIX                            g_View;
 XMMATRIX                            g_Projection;
 XMFLOAT4                            g_vMeshColor( 0.7f, 0.7f, 0.7f, 1.0f );
 
 CCamera Cam;
-DescCamera Desc;
+DescCamera DescCam;
 CDevice Device;
 CSwapChain SC;
 CDeviceContext DevContext;
+DescBuffer DBuffer;
+DescSwapChain DescSC;
+CVertexBuffer VBuffer;
+CIndexBuffer IBuffer;
+CConstantBuffer CBuffer_NC;
+CConstantBuffer CBuffer_CoR;
+CConstantBuffer CBuffer_CEF;
+CDepthStencil DepthStencil;
+CDepthStencilView DSView;
+CRenderTargetView RTView;
+CSamplerState SS;
 
 
 //--------------------------------------------------------------------------------------
@@ -201,7 +219,7 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 //--------------------------------------------------------------------------------------
 HRESULT InitDevice() {
 
-	Cam.init(Desc);
+	Cam.init(DescCam);
 	Device.init();
 
     HRESULT hr = S_OK;
@@ -227,17 +245,28 @@ HRESULT InitDevice() {
     };
     UINT numFeatureLevels = ARRAYSIZE( featureLevels );
 
+	
+	
+	DescSC.BufferCount = 1;
+	DescSC.W = width;
+	DescSC.H = height;
+	DescSC.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DescSC.numerator = 60;
+	DescSC.denominator = 1;
+	DescSC.OutputWindow = g_hWnd;
+	DescSC.count = 1;
+	DescSC.quality = 0;
+	DescSC.Windowed = TRUE;
 
+	SC.init(DescSC);
 
-	SC.init();
-	SC.setWidth(width);
-	SC.setHeight(height);
-	SC.setHwnd(g_hWnd);
+	
+	
    
 
     for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ ) {
         g_driverType = driverTypes[driverTypeIndex];
-        hr = D3D11CreateDeviceAndSwapChain( NULL, g_driverType, NULL, Device.getFlags(), featureLevels, numFeatureLevels,
+        hr = D3D11CreateDeviceAndSwapChain( NULL, g_driverType, NULL,Device.getFlags(), featureLevels, numFeatureLevels,
                                             D3D11_SDK_VERSION, &SC.getSC(), &SC.getSwapC(), &Device.getDevice(), &g_featureLevel, &DevContext.getDContext());
 		if (SUCCEEDED(hr)) {
 			break;
@@ -250,17 +279,20 @@ HRESULT InitDevice() {
     // Create a render target view
     ID3D11Texture2D* pBackBuffer = NULL;
     hr = SC.getSwapC()->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&pBackBuffer );
-    if( FAILED( hr ) )
-        return hr;
+	if (FAILED(hr)) {
+		return hr;
+	}
 
-    hr = Device.getDevice()->CreateRenderTargetView( pBackBuffer, NULL, &g_pRenderTargetView );
-    pBackBuffer->Release();
-    if( FAILED( hr ) )
-        return hr;
+    hr = Device.getDevice()->CreateRenderTargetView( pBackBuffer, NULL, &RTView.getRTV());
+	pBackBuffer->Release();
+	if (FAILED(hr)) {
+		return hr;
+	}
 
     // Create depth stencil texture
-    D3D11_TEXTURE2D_DESC descDepth;
-    ZeroMemory( &descDepth, sizeof(descDepth) );
+    
+	TextureDesc TextureDesc;
+    /*ZeroMemory( &descDepth, sizeof(descDepth) );
     descDepth.Width = width;
     descDepth.Height = height;
     descDepth.MipLevels = 1;
@@ -271,22 +303,44 @@ HRESULT InitDevice() {
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;
-    hr = Device.getDevice()->CreateTexture2D( &descDepth, NULL, &g_pDepthStencil );
+    descDepth.MiscFlags = 0;*/
+
+	ZeroMemory(&TextureDesc, sizeof(TextureDesc));
+	TextureDesc.Width = width;
+	TextureDesc.Height = height;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	TextureDesc.SampleDesc.Count = 1;
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	TextureDesc.CPUAccessFlags = 0;
+	TextureDesc.MiscFlags = 0;
+
+	DepthStencil.init(TextureDesc);
+
+    hr = Device.getDevice()->CreateTexture2D( &DepthStencil.getDesc(), NULL, &DepthStencil.getTexture() );
     if( FAILED( hr ) )
         return hr;
 
     // Create the depth stencil view
-    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory( &descDSV, sizeof(descDSV) );
-    descDSV.Format = descDepth.Format;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
-    hr = Device.getDevice()->CreateDepthStencilView( g_pDepthStencil, &descDSV, &g_pDepthStencilView );
+    
+	DSViewDesc DescDSV;
+
+
+	DescDSV.Format = TextureDesc.Format;
+	DescDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	DescDSV.Texture2D.MipSlice = 0;
+
+	DSView.init(DescDSV);
+
+
+    hr = Device.getDevice()->CreateDepthStencilView( DepthStencil.getTexture(), &DSView.getDSVDesc(), &DSView.getDSV());
     if( FAILED( hr ) )
         return hr;
 
-	DevContext.getDContext()->OMSetRenderTargets( 1, &g_pRenderTargetView, g_pDepthStencilView );
+	DevContext.getDContext()->OMSetRenderTargets( 1, &RTView.getRTV(), DSView.getDSV() );
 
     // Setup the viewport
     D3D11_VIEWPORT vp;
@@ -379,23 +433,29 @@ HRESULT InitDevice() {
         { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
     };
 
-    D3D11_BUFFER_DESC bd;
-    ZeroMemory( &bd, sizeof(bd) );
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof( SimpleVertex ) * 24;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
+    
+    ZeroMemory( &DBuffer, sizeof(DBuffer) );
+	DBuffer.Usage = D3D11_USAGE_DEFAULT;
+	DBuffer.CPUAccessFlags = 0;
+
+	DBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	DBuffer.ByteWidth = sizeof(SimpleVertex) * 24;
+	VBuffer.init(DBuffer);
+	
+
+
+
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory( &InitData, sizeof(InitData) );
     InitData.pSysMem = vertices;
-    hr = Device.getDevice()->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
+    hr = Device.getDevice()->CreateBuffer( &VBuffer.getBD(), &InitData, &VBuffer.getB());
     if( FAILED( hr ) )
         return hr;
 
     // Set vertex buffer
     UINT stride = sizeof( SimpleVertex );
     UINT offset = 0;
-	DevContext.getDContext()->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
+	DevContext.getDContext()->IASetVertexBuffers( 0, 1, &VBuffer.getB(), &stride, &offset );
 
     // Create index buffer
     // Create vertex buffer
@@ -419,37 +479,41 @@ HRESULT InitDevice() {
         23,20,22
     };
 
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof( WORD ) * 36;
-    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    bd.CPUAccessFlags = 0;
+	DBuffer.ByteWidth = sizeof(SimpleVertex) * 24;
+	DBuffer.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	IBuffer.init(DBuffer);
+    
     InitData.pSysMem = indices;
-    hr = Device.getDevice()->CreateBuffer( &bd, &InitData, &g_pIndexBuffer );
+    hr = Device.getDevice()->CreateBuffer( &IBuffer.getBD(), &InitData, &IBuffer.getB());
     if( FAILED( hr ) )
         return hr;
 
     // Set index buffer
-	DevContext.getDContext()->IASetIndexBuffer( g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0 );
+	DevContext.getDContext()->IASetIndexBuffer(IBuffer.getB(), DXGI_FORMAT_R16_UINT, 0 );
 
     // Set primitive topology
 	DevContext.getDContext()->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     // Create the constant buffers
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(CBNeverChanges);
-    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bd.CPUAccessFlags = 0;
-    hr = Device.getDevice()->CreateBuffer( &bd, NULL, &g_pCBNeverChanges );
+	
+	
+	DBuffer.ByteWidth = sizeof(CBNeverChanges);
+	DBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	CBuffer_NC.init(DBuffer);
+
+    hr = Device.getDevice()->CreateBuffer( &CBuffer_NC.getBD(), NULL, &CBuffer_NC.getB());
     if( FAILED( hr ) )
         return hr;
     
-    bd.ByteWidth = sizeof(CBChangeOnResize);
-    hr = Device.getDevice()->CreateBuffer( &bd, NULL, &g_pCBChangeOnResize );
+	DBuffer.ByteWidth = sizeof(CBChangeOnResize);
+	CBuffer_CoR.init(DBuffer);
+    hr = Device.getDevice()->CreateBuffer( &CBuffer_CoR.getBD(), NULL, &CBuffer_CoR.getB());
     if( FAILED( hr ) )
         return hr;
     
-    bd.ByteWidth = sizeof(CBChangesEveryFrame);
-    hr = Device.getDevice()->CreateBuffer( &bd, NULL, &g_pCBChangesEveryFrame );
+	DBuffer.ByteWidth = sizeof(CBChangesEveryFrame);
+	CBuffer_CEF.init(DBuffer);
+    hr = Device.getDevice()->CreateBuffer( &CBuffer_CEF.getBD(), NULL, &CBuffer_CEF.getB());
     if( FAILED( hr ) )
         return hr;
 
@@ -459,40 +523,42 @@ HRESULT InitDevice() {
         return hr;
 
     // Create the sample state
-    D3D11_SAMPLER_DESC sampDesc;
+	SamplerDesc sampDesc;
     ZeroMemory( &sampDesc, sizeof(sampDesc) );
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-    sampDesc.MinLOD = 0;
-    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-    hr = Device.getDevice()->CreateSamplerState( &sampDesc, &g_pSamplerLinear );
+    sampDesc.Filter =			D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sampDesc.AddressU =			D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV =			D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW =			D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.ComparisonFunc =	D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD =			0;
+    sampDesc.MaxLOD =			D3D11_FLOAT32_MAX;
+
+	SS.init(sampDesc);
+    hr = Device.getDevice()->CreateSamplerState( &SS.getSSDesc(), &SS.getSS() );
     if( FAILED( hr ) )
         return hr;
 
     // Initialize the world matrices
     g_World = XMMatrixIdentity();
 
-	Desc.W = (rc.right - rc.left);
-	Desc.H = (rc.bottom - rc.top);
-	Desc.Fov = XM_PIDIV4;
-	Desc.Near = 0.01f;
-	Desc.Far = 1000.f;
+	DescCam.W = (rc.right - rc.left);
+	DescCam.H = (rc.bottom - rc.top);
+	DescCam.Fov = XM_PIDIV4;
+	DescCam.Near = 0.01f;
+	DescCam.Far = 100.f;
 
-
+	Cam.update(DescCam);
 
     CBNeverChanges cbNeverChanges;
     cbNeverChanges.mView = XMMatrixTranspose(Cam.getVM());
-	DevContext.getDContext()->UpdateSubresource( g_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0 );
+	DevContext.getDContext()->UpdateSubresource(CBuffer_NC.getB(), 0, NULL, &cbNeverChanges, 0, 0 );
 
     // Initialize the projection matrix
-    g_Projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, width / (FLOAT)height, 0.01f, 100.0f );
+    g_Projection = XMMatrixPerspectiveFovLH(DescCam.Fov, (DescCam.W / DescCam.H), DescCam.Near, DescCam.Far);
     
     CBChangeOnResize cbChangesOnResize;
     cbChangesOnResize.mProjection = XMMatrixTranspose( g_Projection );
-	DevContext.getDContext()->UpdateSubresource( g_pCBChangeOnResize, 0, NULL, &cbChangesOnResize, 0, 0 );
+	DevContext.getDContext()->UpdateSubresource(CBuffer_CoR.getB(), 0, NULL, &cbChangesOnResize, 0, 0 );
 
     return S_OK;
 }
@@ -504,19 +570,19 @@ HRESULT InitDevice() {
 void CleanupDevice() {
     if(DevContext.getDContext()) DevContext.getDContext()->ClearState();
 
-    if( g_pSamplerLinear ) g_pSamplerLinear->Release();
+    if( SS.getSS() ) SS.getSS()->Release();
     if( g_pTextureRV ) g_pTextureRV->Release();
-    if( g_pCBNeverChanges ) g_pCBNeverChanges->Release();
-    if( g_pCBChangeOnResize ) g_pCBChangeOnResize->Release();
-    if( g_pCBChangesEveryFrame ) g_pCBChangesEveryFrame->Release();
-    if( g_pVertexBuffer ) g_pVertexBuffer->Release();
-    if( g_pIndexBuffer ) g_pIndexBuffer->Release();
+    if( CBuffer_NC.getB() ) CBuffer_NC.getB()->Release();
+    if( CBuffer_CoR.getB() ) CBuffer_CoR.getB()->Release();
+    if( CBuffer_CEF.getB() ) CBuffer_CEF.getB()->Release();
+    if( VBuffer.getB() ) VBuffer.getB()->Release();
+    if( IBuffer.getB() ) IBuffer.getB()->Release();
     if( g_pVertexLayout ) g_pVertexLayout->Release();
     if( g_pVertexShader ) g_pVertexShader->Release();
     if( g_pPixelShader ) g_pPixelShader->Release();
-    if( g_pDepthStencil ) g_pDepthStencil->Release();
-    if( g_pDepthStencilView ) g_pDepthStencilView->Release();
-    if( g_pRenderTargetView ) g_pRenderTargetView->Release();
+    if( DepthStencil.getTexture() ) DepthStencil.getTexture()->Release();
+    if( DSView.getDSV() ) DSView.getDSV()->Release();
+    if(RTView.getRTV()) RTView.getRTV()->Release();
     if(SC.getSwapC()) SC.getSwapC()->Release();
     if(DevContext.getDContext()) DevContext.getDContext()->Release();
     if(Device.getDevice()) Device.getDevice()->Release();
@@ -544,14 +610,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 
 			RECT rc;
 			GetClientRect(g_hWnd, &rc);
-			Desc.W = (rc.right - rc.left);
-			Desc.H = (rc.bottom - rc.top);
+			DescCam.W = (rc.right - rc.left);
+			DescCam.H = (rc.bottom - rc.top);
+			Cam.update(DescCam);
 
-			g_Projection = XMMatrixPerspectiveFovLH(Desc.Fov, Desc.W / Desc.H, Desc.Near, Desc.Far);
+			g_Projection = XMMatrixPerspectiveFovLH(DescCam.Fov, (DescCam.W / DescCam.H), DescCam.Near, DescCam.Far);
 
 			CBChangeOnResize cbChangesOnResize;
 			cbChangesOnResize.mProjection = XMMatrixTranspose( g_Projection );
-			DevContext.getDContext()->UpdateSubresource(g_pCBChangeOnResize, 0, NULL, &cbChangesOnResize, 0, 0);
+			DevContext.getDContext()->UpdateSubresource(CBuffer_CoR.getB(), 0, NULL, &cbChangesOnResize, 0, 0);
 
 		}
 
@@ -593,12 +660,14 @@ void Render() {
     // Clear the back buffer
     //
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
-	DevContext.getDContext()->ClearRenderTargetView( g_pRenderTargetView, ClearColor );
+	DevContext.getDContext()->ClearRenderTargetView(RTView.getRTV(), ClearColor );
+
+	//DevContext.getDContext()->ClearRenderTargetView(  );
 
     //
     // Clear the depth buffer to 1.0 (max depth)
     //
-	DevContext.getDContext()->ClearDepthStencilView( g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	DevContext.getDContext()->ClearDepthStencilView( DSView.getDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
     //
     // Update variables that change once per frame
@@ -606,19 +675,19 @@ void Render() {
     CBChangesEveryFrame cb;
     cb.mWorld = XMMatrixTranspose( g_World );
     cb.vMeshColor = g_vMeshColor;
-	DevContext.getDContext()->UpdateSubresource( g_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0 );
+	DevContext.getDContext()->UpdateSubresource(CBuffer_CEF.getB(), 0, NULL, &cb, 0, 0 );
 
     //
     // Render the cube
     //
 	DevContext.getDContext()->VSSetShader( g_pVertexShader, NULL, 0 );
-	DevContext.getDContext()->VSSetConstantBuffers( 0, 1, &g_pCBNeverChanges );
-	DevContext.getDContext()->VSSetConstantBuffers( 1, 1, &g_pCBChangeOnResize );
-	DevContext.getDContext()->VSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+	DevContext.getDContext()->VSSetConstantBuffers( 0, 1, &CBuffer_NC.getB());
+	DevContext.getDContext()->VSSetConstantBuffers( 1, 1, &CBuffer_CoR.getB());
+	DevContext.getDContext()->VSSetConstantBuffers( 2, 1, &CBuffer_CEF.getB());
 	DevContext.getDContext()->PSSetShader( g_pPixelShader, NULL, 0 );
-	DevContext.getDContext()->PSSetConstantBuffers( 2, 1, &g_pCBChangesEveryFrame );
+	DevContext.getDContext()->PSSetConstantBuffers( 2, 1, &CBuffer_CEF.getB());
 	DevContext.getDContext()->PSSetShaderResources( 0, 1, &g_pTextureRV );
-	DevContext.getDContext()->PSSetSamplers( 0, 1, &g_pSamplerLinear );
+	DevContext.getDContext()->PSSetSamplers( 0, 1, &SS.getSS() );
 	DevContext.getDContext()->DrawIndexed( 36, 0, 0 );
 
     //

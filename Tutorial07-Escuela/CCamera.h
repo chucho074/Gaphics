@@ -63,6 +63,13 @@ public:
 	**/
 	int init(DescCamera);
 
+	/**
+	* @brief	: Update.
+	* @param	: Needs a Camera Description.
+	* @bug		: No Bugs known.
+	**/
+	void update(DescCamera);
+
 private:
 	DescCamera DescCam;
 

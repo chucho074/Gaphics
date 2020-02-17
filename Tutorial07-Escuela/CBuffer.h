@@ -4,7 +4,7 @@
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 07/02/2020
-* @brief	: A basic description of the what do the doc.
+* @brief	: A base class for Buffers.
 * @bug		: No Bugs known.
 **/
 
@@ -23,11 +23,9 @@
 
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: Descriptor for Buffers.
+* @bug		: No Bugs known.
 **/
-//Hacer lo mismo para CSwapChain
 struct DescBuffer {	
 	
 	D3D11_USAGE Usage;
@@ -40,49 +38,63 @@ struct DescBuffer {
 
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: Class for Buffers.
+* @bug		: No Bugs knowns.
 **/
 class CBuffer {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Initializer.
+	* @bug		: No Bugs known.
 	**/
 	CBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Init the class.
+	* @bug		: No Bug known.
 	**/
 	int init();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Update data of the descriptor.
+	* @bug		: No Bugs known.
+	**/
+	void updateData();
+
+	/**
+	* @brief	: Returns the DX11 Buffer.
+	* @bug		: No Bugs known.
 	**/
 	ID3D11Buffer *& getBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Set data from other DescBuffer.
+	* @param	: DescBuffer.
+	* @bug		: No Bugs known.
 	**/
-	void setDataDesc(UINT, UINT);
+	void setDataDesc(DescBuffer);
+
+	/**
+	* @brief	: Returns the DX11 Buffer Description.
+	* @bug		: No Bugs known.
+	**/
+	D3D11_BUFFER_DESC getBD();
+
+	/**
+	* @brief	: Returns the DX11 Buffer.
+	* @bug		: No Bugs known.
+	**/
+	ID3D11Buffer *& getDX11Buffer();
 
 private:
+	D3D11_BUFFER_DESC bd_DX;
 	DescBuffer bd;
-	ID3D11Buffer* PBuffer;
+	ID3D11Buffer * PBuffer;
 
 };

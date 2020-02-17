@@ -14,18 +14,14 @@
 #include "CCamera.h"
 
 
-
-
 CCamera::CCamera() {
 
 }
 
 
-
 CCamera::~CCamera() {
 
 }
-
 
 
 int CCamera::init(DescCamera inDesc) {
@@ -45,12 +41,9 @@ int CCamera::init(DescCamera inDesc) {
 }
 
 
-
-
 XMMATRIX CCamera::getPM() {
 	return PM;
 }
-
 
 
 XMMATRIX CCamera::getVM() {
@@ -58,12 +51,9 @@ XMMATRIX CCamera::getVM() {
 }
 
 
-
 void CCamera::createPM() {
 	//PM = XMMatrixPerspectiveFovLH(DescCam.Fov, (DescCam.W / DescCam.H), DescCam.Near, DescCam.Far);
 }
-
-
 
 
 void CCamera::createVM() {
@@ -71,9 +61,15 @@ void CCamera::createVM() {
 }
 
 
-
 void CCamera::move(XMFLOAT3) {
 
 
 }
 
+
+void CCamera::update(DescCamera inDesc) {
+
+	createPM();
+	createVM();
+
+}

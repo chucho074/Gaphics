@@ -15,44 +15,47 @@
 #pragma once
 #include "CBuffer.h"
 
-struct SimpleVertex {
-	XMFLOAT3 Pos;
-	XMFLOAT2 Tex;
-};
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: Class for Vertex Buffer.
+* @bug		: No Bugs known.
 **/
 class CVertexBuffer {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Initializer.
+	* @bug		: No Bugs known.
 	**/
 	CVertexBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CVertexBuffer();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Init for the class.
+	* @bug		: No Bugs known.
 	**/
-	int init();
+	int init(DescBuffer);
+
+	/**
+	* @brief	: Returns the Buffer Description.
+	* @bug		: No Bugs known.
+	**/
+	D3D11_BUFFER_DESC getBD();
+
+	/**
+	* @brief	: Returns the Buffer.
+	* @bug		: No Bugs known.
+	**/
+	ID3D11Buffer *&getB();
 
 private:
-
+	DescBuffer VertexBD;
 	CBuffer OrigBuffer;
-
+	
 
 
 };
-

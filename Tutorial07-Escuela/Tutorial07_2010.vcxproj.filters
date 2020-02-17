@@ -41,7 +41,30 @@
     <ClCompile Include="CIndexBuffer.cpp">
       <Filter>cpps</Filter>
     </ClCompile>
-    <ClCompile Include="CVertexBuffer.cpp" />
+    <ClCompile Include="CVertexBuffer.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CConstantBuffer.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CDepthStencil.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CDepthStencilView.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderTarget.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture2D.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderTargetView.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CSamplerState.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial07.fx">
@@ -76,7 +99,30 @@
     <ClInclude Include="CIndexBuffer.h">
       <Filter>hs</Filter>
     </ClInclude>
-    <ClInclude Include="CVertexBuffer.h" />
+    <ClInclude Include="CVertexBuffer.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CConstantBuffer.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencil.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencilView.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CRenderTarget.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture2D.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CRenderTargetView.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CSamplerState.h">
+      <Filter>hs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

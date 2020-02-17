@@ -58,6 +58,7 @@ UINT CDevice::getFlags() {
 	return createDeviceFlags;
 }
 
+
 ID3D11Device * &CDevice::getDevice() {
 
 	return Device;
