@@ -51,7 +51,7 @@ public:
 	D3D11_DEPTH_STENCIL_VIEW_DESC getDSVDesc();
 	ID3D11DepthStencilView *& getDSV();
 private:
-	ID3D11DepthStencilView * DSV;
+	ID3D11DepthStencilView * DSV = NULL;
 	DSViewDesc Desc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 

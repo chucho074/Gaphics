@@ -12,7 +12,6 @@
 #include <xnamath.h>
 #include "resource.h"
 
-
 #include "CCamera.h"
 #include "CDevice.h"
 #include "CDeviceContext.h"
@@ -27,26 +26,30 @@
 #include "CRenderTarget.h"
 #include "CRenderTargetView.h"
 #include "CSamplerState.h"
+#include "CViewPort.h"
+#include "CVertexShader.h"
+#include "CPixelShader.h"
+#include "CInputLayout.h"
 
 //--------------------------------------------------------------------------------------
 // Structures
 //--------------------------------------------------------------------------------------
 
 struct SimpleVertex {
-    XMFLOAT3 Pos;
-    XMFLOAT2 Tex;
+    vec3 Pos;
+    vec2 Tex;
 };
 
 struct CBNeverChanges {
-    XMMATRIX mView;
+    mat4x4 mView;
 };
 
 struct CBChangeOnResize {
-    XMMATRIX mProjection;
+    mat4x4 mProjection;
 };
 
 struct CBChangesEveryFrame {
-    XMMATRIX mWorld;
+    mat4x4 mWorld;
     XMFLOAT4 vMeshColor;
 };
 
@@ -64,9 +67,9 @@ D3D_FEATURE_LEVEL                   g_featureLevel = D3D_FEATURE_LEVEL_11_0;
 //ID3D11RenderTargetView*             g_pRenderTargetView = NULL;
 //ID3D11Texture2D*                    g_pDepthStencil = NULL;
 //ID3D11DepthStencilView*             g_pDepthStencilView = NULL;
-ID3D11VertexShader*                 g_pVertexShader = NULL;
-ID3D11PixelShader*                  g_pPixelShader = NULL;
-ID3D11InputLayout*                  g_pVertexLayout = NULL;
+//ID3D11VertexShader*                 g_pVertexShader = NULL;
+//ID3D11PixelShader*                  g_pPixelShader = NULL;
+//ID3D11InputLayout*                  g_pVertexLayout = NULL;
 //ID3D11Buffer*                       g_pVertexBuffer = NULL;
 //ID3D11Buffer*                       g_pIndexBuffer = NULL;
 //ID3D11Buffer*                       g_pCBNeverChanges = NULL;
@@ -74,9 +77,9 @@ ID3D11InputLayout*                  g_pVertexLayout = NULL;
 //ID3D11Buffer*                       g_pCBChangesEveryFrame = NULL;
 ID3D11ShaderResourceView*           g_pTextureRV = NULL;
 //ID3D11SamplerState*                 g_pSamplerLinear = NULL;
-XMMATRIX                            g_World;
-XMMATRIX                            g_View;
-XMMATRIX                            g_Projection;
+mat4x4								g_World;
+//mat4x4                            g_View;
+//mat4x4                            g_Projection;
 XMFLOAT4                            g_vMeshColor( 0.7f, 0.7f, 0.7f, 1.0f );
 
 CCamera Cam;
@@ -95,6 +98,12 @@ CDepthStencil DepthStencil;
 CDepthStencilView DSView;
 CRenderTargetView RTView;
 CSamplerState SS;
+CRenderTarget RT;
+ViewPortDesc VPDesc;
+CViewPort VP;
+CVertexShader VS;
+CPixelShader PS;
+CInputLayout IL;
 
 
 //--------------------------------------------------------------------------------------
@@ -115,26 +124,25 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     UNREFERENCED_PARAMETER( hPrevInstance );
     UNREFERENCED_PARAMETER( lpCmdLine );
 
-    if( FAILED( InitWindow( hInstance, nCmdShow ) ) )
-        return 0;
+	if (FAILED(InitWindow(hInstance, nCmdShow))) {
+		return 0;
+	}
 
-    if( FAILED( InitDevice() ) )
-    {
+    if( FAILED( InitDevice() ) ) {
+		//Los destroy
         CleanupDevice();
         return 0;
     }
 
     // Main message loop
     MSG msg = {0};
-    while( WM_QUIT != msg.message )
-    {
-        if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
-        {
+    while( WM_QUIT != msg.message ) {
+        if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) {
             TranslateMessage( &msg );
             DispatchMessage( &msg );
         }
-        else
-        {
+        else {
+			//Los render
             Render();
         }
     }
@@ -174,9 +182,9 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow ) {
     g_hWnd = CreateWindow( L"TutorialWindowClass", L"Direct3D 11 Tutorial 7", WS_OVERLAPPEDWINDOW,
                            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
                            NULL );
-    if( !g_hWnd )
-        return E_FAIL;
-
+	if (!g_hWnd) {
+		return E_FAIL;
+	}
     ShowWindow( g_hWnd, nCmdShow );
 
     return S_OK;
@@ -188,8 +196,8 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow ) {
 //--------------------------------------------------------------------------------------
 HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut ) {
     HRESULT hr = S_OK;
-
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
     // Setting this flag improves the shader debugging experience, but still allows 
@@ -198,11 +206,11 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
+	//ifdef DX??????
     ID3DBlob* pErrorBlob;
     hr = D3DX11CompileFromFile( szFileName, NULL, NULL, szEntryPoint, szShaderModel, 
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
-    if( FAILED(hr) )
-    {
+    if( FAILED(hr) ) {
         if( pErrorBlob != NULL )
             OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
         if( pErrorBlob ) pErrorBlob->Release();
@@ -219,7 +227,6 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 //--------------------------------------------------------------------------------------
 HRESULT InitDevice() {
 
-	Cam.init(DescCam);
 	Device.init();
 
     HRESULT hr = S_OK;
@@ -236,16 +243,15 @@ HRESULT InitDevice() {
         D3D_DRIVER_TYPE_WARP,
         D3D_DRIVER_TYPE_REFERENCE,
     };
-    UINT numDriverTypes = ARRAYSIZE( driverTypes );
+    unsigned int numDriverTypes = ARRAYSIZE( driverTypes );
 
     D3D_FEATURE_LEVEL featureLevels[] = {
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
     };
-    UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+	unsigned int numFeatureLevels = ARRAYSIZE( featureLevels );
 
-	
 	
 	DescSC.BufferCount = 1;
 	DescSC.W = width;
@@ -260,11 +266,8 @@ HRESULT InitDevice() {
 
 	SC.init(DescSC);
 
-	
-	
-   
 
-    for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ ) {
+    for(unsigned int driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ ) {
         g_driverType = driverTypes[driverTypeIndex];
         hr = D3D11CreateDeviceAndSwapChain( NULL, g_driverType, NULL,Device.getFlags(), featureLevels, numFeatureLevels,
                                             D3D11_SDK_VERSION, &SC.getSC(), &SC.getSwapC(), &Device.getDevice(), &g_featureLevel, &DevContext.getDContext());
@@ -275,35 +278,21 @@ HRESULT InitDevice() {
 	if (FAILED(hr)) {
 		return hr;
 	}
-
-    // Create a render target view
-    ID3D11Texture2D* pBackBuffer = NULL;
-    hr = SC.getSwapC()->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&pBackBuffer );
+	
+	hr = SC.getSwapC()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&RT.getBB());
 	if (FAILED(hr)) {
 		return hr;
 	}
 
-    hr = Device.getDevice()->CreateRenderTargetView( pBackBuffer, NULL, &RTView.getRTV());
-	pBackBuffer->Release();
+    hr = Device.getDevice()->CreateRenderTargetView( RT.getBB(), NULL, &RTView.getRTV());
+	RT.getBB()->Release();
 	if (FAILED(hr)) {
 		return hr;
 	}
 
     // Create depth stencil texture
-    
 	TextureDesc TextureDesc;
-    /*ZeroMemory( &descDepth, sizeof(descDepth) );
-    descDepth.Width = width;
-    descDepth.Height = height;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    descDepth.SampleDesc.Count = 1;
-    descDepth.SampleDesc.Quality = 0;
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    descDepth.CPUAccessFlags = 0;
-    descDepth.MiscFlags = 0;*/
+   
 
 	ZeroMemory(&TextureDesc, sizeof(TextureDesc));
 	TextureDesc.Width = width;
@@ -321,13 +310,13 @@ HRESULT InitDevice() {
 	DepthStencil.init(TextureDesc);
 
     hr = Device.getDevice()->CreateTexture2D( &DepthStencil.getDesc(), NULL, &DepthStencil.getTexture() );
-    if( FAILED( hr ) )
-        return hr;
+	if (FAILED(hr)) {
+		return hr;
+	}
 
     // Create the depth stencil view
     
 	DSViewDesc DescDSV;
-
 
 	DescDSV.Format = TextureDesc.Format;
 	DescDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -343,28 +332,28 @@ HRESULT InitDevice() {
 	DevContext.getDContext()->OMSetRenderTargets( 1, &RTView.getRTV(), DSView.getDSV() );
 
     // Setup the viewport
-    D3D11_VIEWPORT vp;
-    vp.Width = (FLOAT)width;
-    vp.Height = (FLOAT)height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-	DevContext.getDContext()->RSSetViewports( 1, &vp );
+    
+    VPDesc.Width = (float)width;
+    VPDesc.Height = (float)height;
+    VPDesc.MinDepth = 0.0f;
+    VPDesc.MaxDepth = 1.0f;
+    VPDesc.TopLeftX = 0;
+    VPDesc.TopLeftY = 0;
+	VP.init(VPDesc);
+
+	DevContext.getDContext()->RSSetViewports( 1, &VP.getDXVP() );
 
     // Compile the vertex shader
-    ID3DBlob* pVSBlob = NULL;
-    hr = CompileShaderFromFile( L"Tutorial07.fx", "VS", "vs_4_0", &pVSBlob );
+	hr = CompileShaderFromFile(L"Tutorial07.fx", "VS", "vs_4_0", &VS.getVSBlob() );
     if( FAILED( hr ) ) {
-        MessageBox( NULL,
-                    L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
+        MessageBox( NULL, L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
         return hr;
     }
 
     // Create the vertex shader
-    hr = Device.getDevice()->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader );
+	hr = Device.getDevice()->CreateVertexShader(VS.getVSBlob()->GetBufferPointer(), VS.getVSBlob()->GetBufferSize(), NULL, &VS.getVS());
     if( FAILED( hr ) ) {    
-        pVSBlob->Release();
+        VS.getVSBlob()->Release();
         return hr;
     }
 
@@ -373,64 +362,62 @@ HRESULT InitDevice() {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    UINT numElements = ARRAYSIZE( layout );
+	unsigned int numElements = ARRAYSIZE( layout );
 
     // Create the input layout
-    hr = Device.getDevice()->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(),
-                                          pVSBlob->GetBufferSize(), &g_pVertexLayout );
-    pVSBlob->Release();
-    if( FAILED( hr ) )
-        return hr;
-
+    hr = Device.getDevice()->CreateInputLayout( layout, numElements, VS.getVSBlob()->GetBufferPointer(),
+                                          VS.getVSBlob()->GetBufferSize(), &IL.getIL() );
+    VS.getVSBlob()->Release();
+	if (FAILED(hr)) {
+		return hr;
+	}
     // Set the input layout
-	DevContext.getDContext()->IASetInputLayout( g_pVertexLayout );
+	DevContext.getDContext()->IASetInputLayout( IL.getIL() );
 
     // Compile the pixel shader
-    ID3DBlob* pPSBlob = NULL;
-    hr = CompileShaderFromFile( L"Tutorial07.fx", "PS", "ps_4_0", &pPSBlob );
+    hr = CompileShaderFromFile( L"Tutorial07.fx", "PS", "ps_4_0", &PS.getPSBlob() );
     if( FAILED( hr ) ) {
-        MessageBox( NULL,
-                    L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
+        MessageBox( NULL, L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
         return hr;
     }
 
     // Create the pixel shader
-    hr = Device.getDevice()->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader );
-    pPSBlob->Release();
-    if( FAILED( hr ) )
-        return hr;
-
+    hr = Device.getDevice()->CreatePixelShader( PS.getPSBlob()->GetBufferPointer(), PS.getPSBlob()->GetBufferSize(), NULL, &PS.getPS() );
+    PS.getPSBlob()->Release();
+	if (FAILED(hr)) {
+		return hr;
+	}
     // Create vertex buffer
     SimpleVertex vertices[] = {
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( -1.0f, 1.0f, -1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( 1.0f, 1.0f, -1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( 1.0f, 1.0f, 1.0f ),		vec2( 1.0f, 1.0f ) },
+        { vec3( -1.0f, 1.0f, 1.0f ),	vec2( 0.0f, 1.0f ) },
 
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( -1.0f, -1.0f, -1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( 1.0f, -1.0f, -1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( 1.0f, -1.0f, 1.0f ),	vec2( 1.0f, 1.0f ) },
+        { vec3( -1.0f, -1.0f, 1.0f ),	vec2( 0.0f, 1.0f ) },
 
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( -1.0f, -1.0f, 1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( -1.0f, -1.0f, -1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( -1.0f, 1.0f, -1.0f ),	vec2( 1.0f, 1.0f ) },
+        { vec3( -1.0f, 1.0f, 1.0f ),	vec2( 0.0f, 1.0f ) },
 
-        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( 1.0f, -1.0f, 1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( 1.0f, -1.0f, -1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( 1.0f, 1.0f, -1.0f ),	vec2( 1.0f, 1.0f ) },
+        { vec3( 1.0f, 1.0f, 1.0f ),		vec2( 0.0f, 1.0f ) },
 
-        { XMFLOAT3( -1.0f, -1.0f, -1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, -1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( -1.0f, -1.0f, -1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( 1.0f, -1.0f, -1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( 1.0f, 1.0f, -1.0f ),	vec2( 1.0f, 1.0f ) },
+        { vec3( -1.0f, 1.0f, -1.0f ),	vec2( 0.0f, 1.0f ) },
 
-        { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, -1.0f, 1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
-        { XMFLOAT3( 1.0f, 1.0f, 1.0f ), XMFLOAT2( 1.0f, 1.0f ) },
-        { XMFLOAT3( -1.0f, 1.0f, 1.0f ), XMFLOAT2( 0.0f, 1.0f ) },
+        { vec3( -1.0f, -1.0f, 1.0f ),	vec2( 0.0f, 0.0f ) },
+        { vec3( 1.0f, -1.0f, 1.0f ),	vec2( 1.0f, 0.0f ) },
+        { vec3( 1.0f, 1.0f, 1.0f ),		vec2( 1.0f, 1.0f ) },
+        { vec3( -1.0f, 1.0f, 1.0f ),	vec2( 0.0f, 1.0f ) },
     };
 
     
@@ -443,8 +430,6 @@ HRESULT InitDevice() {
 	VBuffer.init(DBuffer);
 	
 
-
-
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory( &InitData, sizeof(InitData) );
     InitData.pSysMem = vertices;
@@ -453,8 +438,8 @@ HRESULT InitDevice() {
         return hr;
 
     // Set vertex buffer
-    UINT stride = sizeof( SimpleVertex );
-    UINT offset = 0;
+    unsigned int stride = sizeof( SimpleVertex );
+	unsigned int offset = 0;
 	DevContext.getDContext()->IASetVertexBuffers( 0, 1, &VBuffer.getB(), &stride, &offset );
 
     // Create index buffer
@@ -494,9 +479,7 @@ HRESULT InitDevice() {
     // Set primitive topology
 	DevContext.getDContext()->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-    // Create the constant buffers
-	
-	
+    // Create the constant buffers	
 	DBuffer.ByteWidth = sizeof(CBNeverChanges);
 	DBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	CBuffer_NC.init(DBuffer);
@@ -539,25 +522,23 @@ HRESULT InitDevice() {
         return hr;
 
     // Initialize the world matrices
-    g_World = XMMatrixIdentity();
+	g_World = mat4x4(1);
 
 	DescCam.W = (rc.right - rc.left);
 	DescCam.H = (rc.bottom - rc.top);
 	DescCam.Fov = XM_PIDIV4;
 	DescCam.Near = 0.01f;
 	DescCam.Far = 100.f;
-
-	Cam.update(DescCam);
+	Cam.init(DescCam);
 
     CBNeverChanges cbNeverChanges;
-    cbNeverChanges.mView = XMMatrixTranspose(Cam.getVM());
+    cbNeverChanges.mView = transpose(Cam.getVM());
 	DevContext.getDContext()->UpdateSubresource(CBuffer_NC.getB(), 0, NULL, &cbNeverChanges, 0, 0 );
 
     // Initialize the projection matrix
-    g_Projection = XMMatrixPerspectiveFovLH(DescCam.Fov, (DescCam.W / DescCam.H), DescCam.Near, DescCam.Far);
-    
+	
     CBChangeOnResize cbChangesOnResize;
-    cbChangesOnResize.mProjection = XMMatrixTranspose( g_Projection );
+    cbChangesOnResize.mProjection = transpose( Cam.getPM() );
 	DevContext.getDContext()->UpdateSubresource(CBuffer_CoR.getB(), 0, NULL, &cbChangesOnResize, 0, 0 );
 
     return S_OK;
@@ -568,24 +549,23 @@ HRESULT InitDevice() {
 // Clean up the objects we've created
 //--------------------------------------------------------------------------------------
 void CleanupDevice() {
-    if(DevContext.getDContext()) DevContext.getDContext()->ClearState();
-
-    if( SS.getSS() ) SS.getSS()->Release();
-    if( g_pTextureRV ) g_pTextureRV->Release();
-    if( CBuffer_NC.getB() ) CBuffer_NC.getB()->Release();
-    if( CBuffer_CoR.getB() ) CBuffer_CoR.getB()->Release();
-    if( CBuffer_CEF.getB() ) CBuffer_CEF.getB()->Release();
-    if( VBuffer.getB() ) VBuffer.getB()->Release();
-    if( IBuffer.getB() ) IBuffer.getB()->Release();
-    if( g_pVertexLayout ) g_pVertexLayout->Release();
-    if( g_pVertexShader ) g_pVertexShader->Release();
-    if( g_pPixelShader ) g_pPixelShader->Release();
-    if( DepthStencil.getTexture() ) DepthStencil.getTexture()->Release();
-    if( DSView.getDSV() ) DSView.getDSV()->Release();
-    if(RTView.getRTV()) RTView.getRTV()->Release();
-    if(SC.getSwapC()) SC.getSwapC()->Release();
-    if(DevContext.getDContext()) DevContext.getDContext()->Release();
-    if(Device.getDevice()) Device.getDevice()->Release();
+	if (DevContext.getDContext())		{ DevContext.getDContext()->ClearState(); }
+	if (SS.getSS())						{ SS.getSS()->Release(); }
+	if (g_pTextureRV)					{ g_pTextureRV->Release(); }
+	if (CBuffer_NC.getB())				{ CBuffer_NC.getB()->Release(); }
+	if (CBuffer_CoR.getB())				{ CBuffer_CoR.getB()->Release(); }
+	if (CBuffer_CEF.getB())				{ CBuffer_CEF.getB()->Release(); }
+	if (VBuffer.getB())					{ VBuffer.getB()->Release(); }
+	if (IBuffer.getB())					{ IBuffer.getB()->Release(); }
+	if (IL.getIL())						{ IL.getIL()->Release(); }
+	if (VS.getVS())						{ VS.getVS()->Release(); }
+	if (PS.getPS())						{ PS.getPS()->Release(); }
+	if (DepthStencil.getTexture())		{ DepthStencil.getTexture()->Release(); }
+	if (DSView.getDSV())				{ DSView.getDSV()->Release(); }
+	if (RTView.getRTV())				{ RTView.getRTV()->Release(); }
+	if (SC.getSwapC())					{ SC.getSwapC()->Release(); }
+	if (DevContext.getDContext())		{ DevContext.getDContext()->Release(); }
+	if (Device.getDevice())				{ Device.getDevice()->Release(); }
 }
 
 
@@ -606,25 +586,78 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 		PostQuitMessage(0);
 		break;
 	}
-		case WM_SIZING: {
+	case WM_SIZING: {
 
-			RECT rc;
-			GetClientRect(g_hWnd, &rc);
-			DescCam.W = (rc.right - rc.left);
-			DescCam.H = (rc.bottom - rc.top);
-			Cam.update(DescCam);
+		RECT rc;
+		GetClientRect(g_hWnd, &rc);
+		DescCam.W = (rc.right - rc.left);
+		DescCam.H = (rc.bottom - rc.top);
+		Cam.update();
 
-			g_Projection = XMMatrixPerspectiveFovLH(DescCam.Fov, (DescCam.W / DescCam.H), DescCam.Near, DescCam.Far);
+		
+		CBChangeOnResize cbChangesOnResize;
+		cbChangesOnResize.mProjection = transpose( Cam.getPM() );
+		DevContext.getDContext()->UpdateSubresource(CBuffer_CoR.getB(), 0, NULL, &cbChangesOnResize, 0, 0);
+		break;
+	}
+	case WM_KEYDOWN: {
 
-			CBChangeOnResize cbChangesOnResize;
-			cbChangesOnResize.mProjection = XMMatrixTranspose( g_Projection );
-			DevContext.getDContext()->UpdateSubresource(CBuffer_CoR.getB(), 0, NULL, &cbChangesOnResize, 0, 0);
-
+		if (wParam == VK_UP) {
+			vec3 moving = {0.f, 0.f, 0.1f};
+			Cam.move(moving);
 		}
-
-		default: {
-			return DefWindowProc(hWnd, message, wParam, lParam);
+		else if (wParam == VK_DOWN) {
+			vec3 moving = { 0.f, 0.f, -0.1f };
+			Cam.move(moving);
 		}
+		if (wParam == VK_LEFT) {
+			vec3 moving = { -0.1f, 0.f, 0.f };
+			Cam.move(moving);
+		}
+		else if (wParam == VK_RIGHT) {
+			vec3 moving = { 0.1f, 0.f, 0.f };
+			Cam.move(moving);
+		}
+		if (wParam == 'E' || wParam == 'e') {
+			vec3 moving = { 0.f, 0.1f, 0.f };
+			Cam.move(moving);
+		}
+		else if (wParam == 'Q' || wParam == 'q') {
+			vec3 moving = { 0.f, -0.1f, 0.f };
+			Cam.move(moving);
+		}
+		CBNeverChanges cbNeverChanges;
+		cbNeverChanges.mView = Cam.getVM();
+		DevContext.getDContext()->UpdateSubresource(CBuffer_NC.getB(), 0, NULL, &cbNeverChanges, 0, 0);
+		break;
+	}
+	case WM_LBUTTONDOWN: {
+		POINT mouse;
+		GetCursorPos(&mouse);
+		Cam.initPos = {mouse.x, mouse.y, 0.f};
+		Cam.mouseClicked = true;
+		break;
+	}
+	case WM_MOUSEMOVE: {
+		if (Cam.mouseClicked) {
+			POINT endPoint;
+			GetCursorPos(&endPoint);
+			Cam.endPos = {endPoint.x, endPoint.y, 0.f};
+			SetCursorPos((int)Cam.initPos.x, (int)Cam.initPos.y);
+			Cam.dir = Cam.initPos - Cam.endPos;
+			Cam.rotate(Cam.dir);
+			CBNeverChanges cbNeverChanges;
+			cbNeverChanges.mView = transpose(Cam.getVM());
+			DevContext.getDContext()->UpdateSubresource(CBuffer_NC.getB(), 0, NULL, &cbNeverChanges, 0, 0);
+		}
+			break;
+	}
+	case WM_LBUTTONUP: {
+		Cam.mouseClicked = false;
+	}
+	default: {
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	 }
     }
 
     return 0;
@@ -649,7 +682,7 @@ void Render() {
     }
 
     // Rotate cube around the origin
-    g_World = XMMatrixRotationY( t );
+    //g_World = XMMatrixRotationY( t );
 
     // Modify the color
     g_vMeshColor.x = ( sinf( t * 1.0f ) + 1.0f ) * 0.5f;
@@ -662,8 +695,6 @@ void Render() {
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red, green, blue, alpha
 	DevContext.getDContext()->ClearRenderTargetView(RTView.getRTV(), ClearColor );
 
-	//DevContext.getDContext()->ClearRenderTargetView(  );
-
     //
     // Clear the depth buffer to 1.0 (max depth)
     //
@@ -673,18 +704,18 @@ void Render() {
     // Update variables that change once per frame
     //
     CBChangesEveryFrame cb;
-    cb.mWorld = XMMatrixTranspose( g_World );
+    cb.mWorld = transpose( g_World );
     cb.vMeshColor = g_vMeshColor;
 	DevContext.getDContext()->UpdateSubresource(CBuffer_CEF.getB(), 0, NULL, &cb, 0, 0 );
 
     //
     // Render the cube
     //
-	DevContext.getDContext()->VSSetShader( g_pVertexShader, NULL, 0 );
+	DevContext.getDContext()->VSSetShader( VS.getVS(), NULL, 0 );
 	DevContext.getDContext()->VSSetConstantBuffers( 0, 1, &CBuffer_NC.getB());
 	DevContext.getDContext()->VSSetConstantBuffers( 1, 1, &CBuffer_CoR.getB());
 	DevContext.getDContext()->VSSetConstantBuffers( 2, 1, &CBuffer_CEF.getB());
-	DevContext.getDContext()->PSSetShader( g_pPixelShader, NULL, 0 );
+	DevContext.getDContext()->PSSetShader( PS.getPS(), NULL, 0 );
 	DevContext.getDContext()->PSSetConstantBuffers( 2, 1, &CBuffer_CEF.getB());
 	DevContext.getDContext()->PSSetShaderResources( 0, 1, &g_pTextureRV );
 	DevContext.getDContext()->PSSetSamplers( 0, 1, &SS.getSS() );

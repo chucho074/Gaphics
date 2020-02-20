@@ -1,6 +1,6 @@
 /**
 * @LC		: 16/02/2020
-* @file		: CSamplerState.h
+* @file		: CSamplerState.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 15/02/2020
@@ -14,15 +14,18 @@
 **/
 #include "CSamplerState.h"
 
+
 CSamplerState::CSamplerState() {
 
 
 }
 
+
 CSamplerState::~CSamplerState() {
 
 
 }
+
 
 int CSamplerState::init(SamplerDesc inDesc) {
 	ZeroMemory(&SamplerLinear, sizeof(SamplerLinear));
@@ -41,9 +44,11 @@ int CSamplerState::init(SamplerDesc inDesc) {
 	return 0;
 }
 
+
 ID3D11SamplerState *& CSamplerState::getSS() {
 	return SamplerLinear;
 }
+
 
 D3D11_SAMPLER_DESC CSamplerState::getSSDesc() {
 	return Desc;

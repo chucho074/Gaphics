@@ -20,6 +20,14 @@
 #include <xnamath.h>
 #include "resource.h"
 
+#include "glm/vec3.hpp" // glm::vec3
+#include "glm/vec4.hpp" // glm::vec4
+#include "glm/mat4x4.hpp" // glm::mat4
+#include "glm/gtc/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale, glm::perspective
+
+using namespace glm;
+
+
 
 /**
 * @brief	: Short description of function.
@@ -27,20 +35,20 @@
 * @bug		: Bug description.
 **/
 struct DescCamera {
-	XMVECTOR pos;
-	XMVECTOR lAt;
-	XMVECTOR up_Desc; //Del mundo
-	FLOAT W = 0.f;
-	FLOAT H = 0.f;
-	FLOAT Fov = 0.f;
-	FLOAT Near = 0.f;
-	FLOAT Far = 0.f;
+	vec3 pos;
+	vec3 lAt;
+	vec3 up_Desc; //Del mundo
+	float W = 0.f;
+	float H = 0.f;
+	float Fov = 0.f;
+	float Near = 0.f;
+	float Far = 0.f;
 };
 
 /**
 * @brief	: Short description of function.
 * @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @bug		: Al mover la camara primero se buguea y si se mueve primero no.
 **/
 class CCamera {
 public:
@@ -68,31 +76,38 @@ public:
 	* @param	: Needs a Camera Description.
 	* @bug		: No Bugs known.
 	**/
-	void update(DescCamera);
+	void update();
 
 private:
 	DescCamera DescCam;
 
-	XMFLOAT3 Front;
-	XMFLOAT3 Right;
-	XMFLOAT3 Up;
+	vec3 Front;
+	vec3 Right;
+	vec3 Up;
 
-	XMMATRIX PM;
-	XMMATRIX VM;
+	mat4x4 PM;
+	mat4x4 VM;
 
+public:
+	vec3 initPos;
+	vec3 endPos;
+	vec3 dir;
+	bool mouseClicked;
 public:
 
 	/**
 	* @brief	: Getter for the Projection Matrix.
 	* @bug		: No Bugs known.
 	**/
-	XMMATRIX getPM();
+	mat4x4 getPM();
+
+	void create();
 
 	/**
 	* @brief	: Getter for the View Matrix.
 	* @bug		: No Bugs known.
 	**/
-	XMMATRIX getVM();
+	mat4x4 getVM();
 
 	/**
 	* @brief	: Create the Projection Matrix.
@@ -107,10 +122,51 @@ public:
 	void createVM();
 
 	/**
+	* @brief	: Create the Projection Matrix.
+	* @bug		: Can't use it 4 create de PM, have a error from the Lib.
+	**/
+	void updatePM();
+
+	/**
+	* @brief	: Create the View Matrix.
+	* @bug		: No Bugs known.
+	**/
+	void updateVM();
+
+	/**
 	* @brief	: Move the VM.
 	* @param	: .
 	* @bug		: No Bugs known.
 	**/
-	void move(XMFLOAT3);
+	void move(vec3);
+
+	/**
+	* @brief	: Rotate the VM.
+	* @param	: .
+	* @bug		: No Bugs known.
+	**/
+	void rotate(vec3);
+
+	/**
+	* @brief	: Rotate the VM.
+	* @param	: .
+	* @bug		: No Bugs known.
+	**/
+	void rotateUp(vec3);
+
+	/**
+	* @brief	: Rotate the VM.
+	* @param	: .
+	* @bug		: No Bugs known.
+	**/
+	void rotateRight(vec3);
+
+	/**
+	* @brief	: Rotate the VM.
+	* @param	: .
+	* @bug		: No Bugs known.
+	**/
+	void rotateFront(vec3);
+
 };
 

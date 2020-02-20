@@ -65,6 +65,18 @@
     <ClCompile Include="CSamplerState.cpp">
       <Filter>cpps</Filter>
     </ClCompile>
+    <ClCompile Include="CViewPort.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CInputLayout.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CPixelShader.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexShader.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial07.fx">
@@ -121,6 +133,18 @@
       <Filter>hs</Filter>
     </ClInclude>
     <ClInclude Include="CSamplerState.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CViewPort.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexShader.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputLayout.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CPixelShader.h">
       <Filter>hs</Filter>
     </ClInclude>
   </ItemGroup>

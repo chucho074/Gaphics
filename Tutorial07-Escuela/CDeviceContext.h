@@ -21,38 +21,30 @@
 
 /**
 * @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @bug		: No Bugs known.
 **/
-
 class CDeviceContext {
 public: 
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Constructor.
+	* @bug		: No Bugs known.
 	**/
 	CDeviceContext();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CDeviceContext();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the Device Context.
+	* @bug		: No Bugs known.
 	**/
 	ID3D11DeviceContext * & getDContext();
 
 private:
 	ID3D11DeviceContext* DContext;
 
-
-
 };
-

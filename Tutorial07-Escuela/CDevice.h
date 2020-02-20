@@ -20,71 +20,61 @@
 #include "resource.h"
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: CDevice class.
+* @bug		: No Bugs known.
 **/
 class CDevice {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Constructor.
+	* @bug		: No Bugs known.
 	**/
 	CDevice();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CDevice();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Initializer.
+	* @bug		: No Bugs known.
 	**/
 	int init();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Update.
+	* @bug		: No Bugs known.
 	**/
 	void update();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Render.
+	* @bug		: No Bugs known.
 	**/
 	void render();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destroy.
+	* @bug		: No Bugs known.
 	**/
 	void destroy();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the flags DX.
+	* @bug		: No Bugs known.
 	**/
 	UINT getFlags();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the device DX.
+	* @bug		: No Bugs known.
 	**/
 	ID3D11Device * & getDevice();
 
 private:
 	UINT createDeviceFlags = 0;
-	ID3D11Device* Device;
+	ID3D11Device* Device = NULL;
 
 };
-

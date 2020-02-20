@@ -21,9 +21,8 @@
 
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: SwapChain Descriptor.
+* @bug		: No Bugs known.
 **/
 struct DescSwapChain {
 	
@@ -42,72 +41,66 @@ struct DescSwapChain {
 
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: SwapChain Class.
+* @bug		: No Bugs known.
 **/
 class CSwapChain {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Constructor.
+	* @bug		: No Bugs known.
 	**/
 	CSwapChain();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CSwapChain();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Initializer.
+	* @param	: DescSwapChain.
+	* @bug		: No Bugs known.
 	**/
 	int init(DescSwapChain);
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Update.
+	* @bug		: No Bugs known..
 	**/
 	void update();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Setter the Width.
+	* @param	: UINT.
+	* @bug		: No Bugs known.
 	**/
 	void setWidth(UINT);
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Setter the Height.
+	* @param	: UINT.
+	* @bug		: No Bugs known.
 	**/
 	void setHeight(UINT);
 
 	/**
 	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @param	: HWHD.
+	* @bug		: No Bugs known.
 	**/
 	void setHwnd(HWND inHwnd);
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the SwapChain Desc DX.
+	* @bug		: No Bugs known.
 	**/
 	DXGI_SWAP_CHAIN_DESC getSC();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the SwapChain DX.
+	* @bug		: No Bugs known.
 	**/
 	IDXGISwapChain *&getSwapC();
 
@@ -119,4 +112,3 @@ private:
 	HWND hWnd;
 	DescSwapChain Desc;
 };
-

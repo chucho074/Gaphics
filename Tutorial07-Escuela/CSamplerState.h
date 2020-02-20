@@ -21,9 +21,8 @@
 #include "resource.h"
 
 /**
-* @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @brief	: Description of the Sampler.
+* @bug		: No Bugs known.
 **/
 struct SamplerDesc {
 	D3D11_FILTER Filter;
@@ -40,48 +39,43 @@ struct SamplerDesc {
 
 /**
 * @brief	: Short description of function.
-* @param	: Parameter descriptor.
-* @bug		: Bug description.
+* @bug		: No Bugs known.
 **/
 class CSamplerState {
 public:
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Constructor.
+	* @bug		: No Bugs known.
 	**/
 	CSamplerState();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
 	**/
 	~CSamplerState();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Initializer.
+	* @param	: SamplerDesc.
+	* @bug		: No Bugs known.
 	**/
 	int init(SamplerDesc);
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the SamplerState.
+	* @bug		: No Bugs known.
 	**/
 	ID3D11SamplerState *& getSS();
 
 	/**
-	* @brief	: Short description of function.
-	* @param	: Parameter descriptor.
-	* @bug		: Bug description.
+	* @brief	: Getter the DX Sampler Desc.
+	* @bug		: No Bugs known.
 	**/
 	D3D11_SAMPLER_DESC getSSDesc();
 
 private:
-	ID3D11SamplerState * SamplerLinear;
+	ID3D11SamplerState * SamplerLinear = NULL;
 	D3D11_SAMPLER_DESC Desc;
 
 };

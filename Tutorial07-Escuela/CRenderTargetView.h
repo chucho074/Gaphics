@@ -20,18 +20,35 @@
 #include <xnamath.h>
 #include "resource.h"
 
-
+/**
+* @brief	: Short description of function.
+* @bug		: No Bugs known.
+**/
 class CRenderTargetView {
 public:
 
+	/**
+	* @brief	: Constructor.
+	* @bug		: No Bugs known.
+	**/
 	CRenderTargetView();
+
+	/**
+	* @brief	: Destructor.
+	* @bug		: No Bugs known.
+	**/
 	~CRenderTargetView();
+
+	/**
+	* @brief	: Getter the Render Target View DX.
+	* @bug		: No Bugs known.
+	**/
 	ID3D11RenderTargetView *& getRTV();
 
 
 private:
 
-	ID3D11RenderTargetView* RTV;
+	ID3D11RenderTargetView* RTV = NULL;
 
 
 };

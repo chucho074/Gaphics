@@ -44,7 +44,7 @@ struct DescBuffer {
 class CBuffer {
 public:
 	/**
-	* @brief	: Initializer.
+	* @brief	: Constructor of the class.
 	* @bug		: No Bugs known.
 	**/
 	CBuffer();
@@ -56,7 +56,7 @@ public:
 	~CBuffer();
 
 	/**
-	* @brief	: Init the class.
+	* @brief	: Initializer.
 	* @bug		: No Bug known.
 	**/
 	int init();
@@ -95,6 +95,6 @@ public:
 private:
 	D3D11_BUFFER_DESC bd_DX;
 	DescBuffer bd;
-	ID3D11Buffer * PBuffer;
+	ID3D11Buffer * PBuffer = NULL;
 
 };

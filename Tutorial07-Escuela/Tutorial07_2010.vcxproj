@@ -382,12 +382,16 @@
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CDeviceContext.cpp" />
     <ClCompile Include="CIndexBuffer.cpp" />
+    <ClCompile Include="CInputLayout.cpp" />
+    <ClCompile Include="CPixelShader.cpp" />
     <ClCompile Include="CRenderTarget.cpp" />
     <ClCompile Include="CRenderTargetView.cpp" />
     <ClCompile Include="CSamplerState.cpp" />
     <ClCompile Include="CSwapChain.cpp" />
     <ClCompile Include="CTexture2D.cpp" />
     <ClCompile Include="CVertexBuffer.cpp" />
+    <ClCompile Include="CVertexShader.cpp" />
+    <ClCompile Include="CViewPort.cpp" />
     <ClCompile Include="Tutorial07.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -402,13 +406,17 @@
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CDeviceContext.h" />
     <ClInclude Include="CIndexBuffer.h" />
+    <ClInclude Include="CInputLayout.h" />
     <ClInclude Include="CommentShit.h" />
+    <ClInclude Include="CPixelShader.h" />
     <ClInclude Include="CRenderTarget.h" />
     <ClInclude Include="CRenderTargetView.h" />
     <ClInclude Include="CSamplerState.h" />
     <ClInclude Include="CSwapChain.h" />
     <ClInclude Include="CTexture2D.h" />
     <ClInclude Include="CVertexBuffer.h" />
+    <ClInclude Include="CVertexShader.h" />
+    <ClInclude Include="CViewPort.h" />
     <CLInclude Include="resource.h" />
     <ResourceCompile Include="Tutorial07.rc" />
   </ItemGroup>
