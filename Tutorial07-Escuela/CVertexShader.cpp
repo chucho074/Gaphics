@@ -1,5 +1,5 @@
 /**
-* @LC		: 19/02/2020
+* @LC		: 24/02/2020
 * @file		: CVertexShader.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -26,12 +26,12 @@ CVertexShader::~CVertexShader() {
 }
 
 
-ID3D11VertexShader *&CVertexShader::getVS() {
+void *&CVertexShader::getVS() {
 	return VS;
 }
 
 
-ID3DBlob *& CVertexShader::getVSBlob() {
+void *& CVertexShader::getVSBlob() {
 	return VS_Blob;
 }
 

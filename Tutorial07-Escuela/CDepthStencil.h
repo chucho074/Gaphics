@@ -1,5 +1,5 @@
 /**
-* @LC		: 15/02/2020
+* @LC		: 24/02/2020
 * @file		: CDephtStencil.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -24,8 +24,11 @@ public:
 	CDepthStencil();
 	~CDepthStencil();
 	int init(TextureDesc);
-	ID3D11Texture2D *& getTexture();
+	void *& getTexture();
+
+#ifdef D_DIRECTX
 	D3D11_TEXTURE2D_DESC getDesc();
+#endif
 private:
 	CTexture2D TextureClass;
 

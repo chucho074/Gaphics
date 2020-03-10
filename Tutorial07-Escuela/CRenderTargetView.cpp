@@ -1,5 +1,5 @@
 /**
-* @LC		: 16/02/2020
+* @LC		: 24/02/2020
 * @file		: CRenderTargetView.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -16,7 +16,7 @@
 
 
 CRenderTargetView::CRenderTargetView() {
-
+	RTV = nullptr;
 
 }
 
@@ -28,6 +28,6 @@ CRenderTargetView::~CRenderTargetView() {
 }
 
 
-ID3D11RenderTargetView *& CRenderTargetView::getRTV() {
+void *& CRenderTargetView::getRTV() {
 	return RTV;
 }

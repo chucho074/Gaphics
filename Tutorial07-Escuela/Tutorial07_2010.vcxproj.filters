@@ -18,6 +18,12 @@
     <Filter Include="hs">
       <UniqueIdentifier>{683e17c7-b428-441f-a59a-a981aa21eaec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{c4be959a-e14f-49c8-afbb-3d4961050dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assimp">
+      <UniqueIdentifier>{a6ef9534-2ce6-40c2-92af-c33caea3e053}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCamera.cpp">
@@ -77,10 +83,56 @@
     <ClCompile Include="CVertexShader.cpp">
       <Filter>cpps</Filter>
     </ClCompile>
+    <ClCompile Include="ImGUI\imgui_impl_dx11.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_impl_win32.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_draw.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUI\imgui_widgets.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraFP.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CGraphicsAPI.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="CUI.cpp">
+      <Filter>cpps</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial07.fx">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assimp\color4.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\material.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\matrix3x3.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\matrix4x4.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\quaternion.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\vector2.inl">
+      <Filter>Assimp</Filter>
+    </None>
+    <None Include="Assimp\vector3.inl">
+      <Filter>Assimp</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +199,151 @@
     <ClInclude Include="CPixelShader.h">
       <Filter>hs</Filter>
     </ClInclude>
+    <ClInclude Include="ImGUI\imgui_impl_dx11.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui_impl_win32.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_rectpack.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_textedit.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imstb_truetype.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imconfig.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUI\imgui_internal.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CCameraFP.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CGraphicsAPI.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="CUI.h">
+      <Filter>hs</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Compiler\poppack1.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Compiler\pstdint.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Compiler\pushpack1.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\ai_assert.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\anim.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\camera.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\cexport.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\cfileio.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\cimport.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\color4.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\config.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\DefaultLogger.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\defs.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Exporter.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Importer.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\importerdesc.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\IOStream.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\IOSystem.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\light.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\Logger.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\LogStream.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\material.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\matrix3x3.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\matrix4x4.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\mesh.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\metadata.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\NullLogger.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\postprocess.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\ProgressHandler.hpp">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\quaternion.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\scene.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\texture.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\types.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\vector2.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\vector3.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\version.h">
+      <Filter>Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

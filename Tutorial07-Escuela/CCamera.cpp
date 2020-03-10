@@ -26,6 +26,7 @@ CCamera::~CCamera() {
 
 int CCamera::init(DescCamera inDesc) {
 
+	ZeroMemory(&DescCam, sizeof(DescCam));
 	DescCam = inDesc;
 	DescCam.pos = { 0.0f, 3.0f, -6.0f };
 	DescCam.lAt = { 0.0f, 1.0f, 0.0f };
@@ -35,8 +36,8 @@ int CCamera::init(DescCamera inDesc) {
 	Right = normalize(cross(DescCam.up_Desc, Front));
 	Up = normalize(cross(Front, Right));
 
-	create();
-
+	createVM();
+	updatePM();
 
 	return 0;
 }
@@ -52,15 +53,24 @@ mat4x4 CCamera::getVM() {
 }
 
 
-void CCamera::createPM() {
-	PM = perspectiveFovLH(DescCam.Fov, DescCam.W, DescCam.H, DescCam.Near, DescCam.Far);
-	
-}
-
-
 void CCamera::createVM() {
-	VM = lookAtLH(DescCam.pos, DescCam.lAt, DescCam.up_Desc);
+	//VM = transpose(lookAtLH(DescCam.pos, DescCam.lAt, DescCam.up_Desc));
 	
+
+	mat4 Axis = { Right.x,	Right.y,	Right.z,	0,
+				Up.x,		Up.y,		Up.z,		0,
+				Front.x,	Front.y,	Front.z,	0,
+				0,			0,			0,			1 
+	};
+
+	mat4 Pos = { 1,0,0,-DescCam.pos.x,
+			0,1,0,-DescCam.pos.y,
+			0,0,1,-DescCam.pos.z,
+			0,0,0,1 
+	};
+
+	Pos *= Axis;		//Crear matriz vista
+	VM = Pos;
 }
 
 
@@ -75,7 +85,6 @@ void CCamera::updateVM() {
 	Up = { VM[1][0], VM[1][1], VM[1][2] };
 	Front = { VM[2][0], VM[2][1], VM[2][2] };
 	DescCam.lAt = Front + DescCam.pos;
-	
 }
 
 
@@ -89,28 +98,25 @@ void CCamera::move(vec3 Tras) {
 	if (Tras.z != 0.f) {
 		DescCam.pos += (Front * Tras.z);
 	}
-
-
-
-
+	Right = normalize(Right);
+	Up = normalize(Up);
+	Front = normalize(Front);
 
 	mat4 Axis {
 		Right.x,	Right.y,	Right.z,	0,
 		Up.x,		Up.y,		Up.z,		0,
 		Front.x,	Front.y,	Front.z,	0,
 		0,			0,			0,			1
-
 	};
 
 	mat4 Pos {
-	1,0,0,-DescCam.pos.x,
-	0,1,0,-DescCam.pos.y,
-	0,0,1,-DescCam.pos.z,
-	0,0,0,1
+		1,0,0,-DescCam.pos.x,
+		0,1,0,-DescCam.pos.y,
+		0,0,1,-DescCam.pos.z,
+		0,0,0,1
 	};
 	Pos *= Axis;
 	VM = Pos;
-	updateVM();
 	createVM();
 }
 
@@ -122,20 +128,24 @@ void CCamera::update() {
 
 
 void CCamera::create() {
-
-	createPM();
+	updatePM();
 	createVM();
-
 }
 
 
 void CCamera::rotate(vec3 inDir) {
-	rotateUp(inDir);
-	rotateRight(inDir);
+	if (xAngle != 25.f) {
+		rotateUp(inDir);
+	}
+	if (yAngle != 80.f || yAngle != -20.f) {
+		rotateRight(inDir);
+	}
+	rotateFront(inDir);
 }
 
 
 void CCamera::rotateUp(vec3 inDir) {
+	//xAngle += inDir.x;
 	float camcos = cosf(inDir.x / 100.f);
 	float camsin = sinf(inDir.x / 100.f);
 	mat4 rotX {
@@ -146,11 +156,11 @@ void CCamera::rotateUp(vec3 inDir) {
 	};
 	VM *= rotX;
 	updateVM();
-
 }
 
 
 void CCamera::rotateRight(vec3 inDir) {
+	//yAngle += inDir.y;
 	float camcos = cosf(inDir.y / 100.f);
 	float camsin = sinf(inDir.y / 100.f);
 	mat4 rotY {
@@ -161,7 +171,6 @@ void CCamera::rotateRight(vec3 inDir) {
 	};
 	VM *= rotY;
 	updateVM();
-
 }
 
 
@@ -179,5 +188,7 @@ void CCamera::rotateFront(vec3 inDir) {
 	updateVM();
 }
 
-
-//Revisando otra version del proyecto :v = TRUE
+void CCamera::updateSize(unsigned int inW, unsigned int inH) {
+	DescCam.W = inW;
+	DescCam.H = inH;
+}

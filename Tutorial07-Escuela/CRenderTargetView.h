@@ -1,6 +1,6 @@
 /**
-* @LC		: 16/02/2020
-* @file		: CCamera.h
+* @LC		: 24/02/2020
+* @file		: CRenderTargetView.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 15/02/2020
@@ -14,11 +14,13 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 
 /**
 * @brief	: Short description of function.
@@ -43,13 +45,11 @@ public:
 	* @brief	: Getter the Render Target View DX.
 	* @bug		: No Bugs known.
 	**/
-	ID3D11RenderTargetView *& getRTV();
+	void *& getRTV();
 
 
 private:
 
-	ID3D11RenderTargetView* RTV = NULL;
-
-
+	void * RTV;
 };
 

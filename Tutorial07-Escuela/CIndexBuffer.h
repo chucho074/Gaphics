@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CIndexBuffer.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -41,16 +41,18 @@ public:
 	int init(DescBuffer);
 
 	/**
+	* @brief	: Returns the Buffer.
+	* @bug		: No Bugs known.
+	**/
+	void *&getB();
+
+#ifdef D_DIRECTX
+	/**
 	* @brief	: Returns the DX11 Buffer Description.
 	* @bug		: No Bugs known.
 	**/
 	D3D11_BUFFER_DESC getBD();
-
-	/**
-	* @brief	: Returns the Buffer.
-	* @bug		: No Bugs known.
-	**/
-	ID3D11Buffer *&getB();
+#endif
 
 private:
 	DescBuffer IndexDB;

@@ -14,12 +14,6 @@
 **/
 #pragma once
 #include <windows.h>
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <d3dcompiler.h>
-#include <xnamath.h>
-#include "resource.h"
-
 #include "glm/vec3.hpp" // glm::vec3
 #include "glm/vec4.hpp" // glm::vec4
 #include "glm/mat4x4.hpp" // glm::mat4
@@ -88,6 +82,8 @@ private:
 	mat4x4 PM;
 	mat4x4 VM;
 
+	float xAngle = 0;
+	float yAngle = 0;
 public:
 	vec3 initPos;
 	vec3 endPos;
@@ -108,12 +104,6 @@ public:
 	* @bug		: No Bugs known.
 	**/
 	mat4x4 getVM();
-
-	/**
-	* @brief	: Create the Projection Matrix.
-	* @bug		: Can't use it 4 create de PM, have a error from the Lib.
-	**/
-	void createPM();
 
 	/**
 	* @brief	: Create the View Matrix.
@@ -167,6 +157,9 @@ public:
 	* @bug		: No Bugs known.
 	**/
 	void rotateFront(vec3);
+
+
+	void updateSize(unsigned int, unsigned int);
 
 };
 

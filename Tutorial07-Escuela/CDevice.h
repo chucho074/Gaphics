@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CDevice.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -13,11 +13,13 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 
 /**
 * @brief	: CDevice class.
@@ -65,16 +67,17 @@ public:
 	* @brief	: Getter the flags DX.
 	* @bug		: No Bugs known.
 	**/
-	UINT getFlags();
+	unsigned int getFlags();
 
 	/**
 	* @brief	: Getter the device DX.
 	* @bug		: No Bugs known.
 	**/
-	ID3D11Device * & getDevice();
+	void * & getDevice();
 
 private:
-	UINT createDeviceFlags = 0;
-	ID3D11Device* Device = NULL;
+	unsigned int createDeviceFlags = 0;
+	void * Device = nullptr;
+
 
 };

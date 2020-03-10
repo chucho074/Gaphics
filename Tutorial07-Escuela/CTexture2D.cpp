@@ -1,5 +1,5 @@
 /**
-* @LC		: 13/02/2020
+* @LC		: 24/02/2020
 * @file		: CTexture2D.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -7,7 +7,6 @@
 * @brief	: A basic description of the what do the doc.
 * @bug		: No Bugs known.
 **/
-
 
 /**
 * Headers
@@ -20,17 +19,16 @@ CTexture2D::CTexture2D() {
 
 }
 
-
 CTexture2D::~CTexture2D() {
 
 
 }
 
-
 int CTexture2D::init(TextureDesc inDesc) {
 	ZeroMemory(&Desc, sizeof(Desc));
 	Desc = inDesc;
-	
+#ifdef D_DIRECTX
+	ZeroMemory(&Dx11_Desc, sizeof(Dx11_Desc));
 	Dx11_Desc.Width = Desc.Width;
 	Dx11_Desc.Height = Desc.Height;
 	Dx11_Desc.MipLevels = Desc.MipLevels;
@@ -41,15 +39,16 @@ int CTexture2D::init(TextureDesc inDesc) {
 	Dx11_Desc.BindFlags = Desc.BindFlags;
 	Dx11_Desc.CPUAccessFlags = Desc.CPUAccessFlags;
 	Dx11_Desc.MiscFlags = Desc.MiscFlags;
+#endif
 	return 0;
 }
 
-
-ID3D11Texture2D *& CTexture2D::getDXTexture() {
+void *& CTexture2D::getDXTexture() {
 	return Texture;
 }
 
-
+#ifdef D_DIRECTX
 D3D11_TEXTURE2D_DESC CTexture2D::getDXDesc() {
 	return Dx11_Desc;
 }
+#endif

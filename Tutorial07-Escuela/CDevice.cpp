@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CDevice.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -27,10 +27,10 @@ CDevice::~CDevice() {
 
 
 int CDevice::init() {
-#ifdef _DEBUG
+#ifdef D_DIRECTX
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	Device = nullptr;
 #endif
-	Device = NULL;
 
 	return 0;
 }
@@ -54,12 +54,12 @@ void CDevice::destroy() {
 }
 
 
-UINT CDevice::getFlags() {
+unsigned int CDevice::getFlags() {
 	return createDeviceFlags;
 }
 
 
-ID3D11Device * &CDevice::getDevice() {
+void * &CDevice::getDevice() {
 
 	return Device;
 }

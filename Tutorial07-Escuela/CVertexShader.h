@@ -1,6 +1,6 @@
 /**
-* @LC		: 19/02/2020
-* @file		: CInputLayout.h
+* @LC		: 24/02/2020
+* @file		: CVertexShader.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 19/02/2020
@@ -13,11 +13,13 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 
 
 /**
@@ -43,15 +45,15 @@ public:
 	* @brief	: Getter for VertexShader DX.
 	* @bug		: No Bugs known.
 	**/
-	ID3D11VertexShader *& getVS();
+	void *& getVS();
 
 	/**
 	* @brief	: Getter for the Blob DX.
 	* @bug		: No Bugs known.
 	**/
-	ID3DBlob *& getVSBlob();
+	void *& getVSBlob();
 private:
 
-	ID3D11VertexShader * VS;
-	ID3DBlob * VS_Blob;
+	void * VS;
+	void * VS_Blob;
 };

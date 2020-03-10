@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CDeviceContext.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -13,11 +13,13 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 
 /**
 * @brief	: Short description of function.
@@ -42,9 +44,9 @@ public:
 	* @brief	: Getter the Device Context.
 	* @bug		: No Bugs known.
 	**/
-	ID3D11DeviceContext * & getDContext();
+	void * & getDContext();
 
 private:
-	ID3D11DeviceContext* DContext;
+	void * DContext;
 
 };

@@ -1,6 +1,6 @@
 /**
-* @LC		: 17/02/2020
-* @file		: CCamera.h
+* @LC		: 24/02/2020
+* @file		: CRenderTarget.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 16/02/2020
@@ -14,12 +14,15 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 #include "CTexture2D.h"
+
 
 /**
 * @brief	: Render Target Class.
@@ -44,7 +47,7 @@ public:
 	* @brief	: Getter the BackBuffer DX.
 	* @bug		: No Bugs known.
 	**/
-	ID3D11Texture2D *& getBB();
+	void *& getBB();
 
 private:
 

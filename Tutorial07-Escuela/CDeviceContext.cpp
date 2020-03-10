@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CDeviceContext.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -26,7 +26,7 @@ CDeviceContext::~CDeviceContext() {
 }
 
 
-ID3D11DeviceContext * &CDeviceContext::getDContext() {
+void * &CDeviceContext::getDContext() {
 
 	return DContext;
 }

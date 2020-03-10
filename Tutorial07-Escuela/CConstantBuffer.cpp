@@ -1,5 +1,5 @@
 /**
-* @LC		: 12/02/2020
+* @LC		: 24/02/2020
 * @file		: CConstantBuffer.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -34,10 +34,12 @@ int CConstantBuffer::init(DescBuffer inDesc) {
 	return 0;
 }
 
+#ifdef D_DIRECTX
 D3D11_BUFFER_DESC CConstantBuffer::getBD() {
 	return OrigBuffer.getBD();
 }
+#endif
 
-ID3D11Buffer *&CConstantBuffer::getB() {
+void *&CConstantBuffer::getB() {
 	return OrigBuffer.getDX11Buffer();
 }

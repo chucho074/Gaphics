@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CSwapChain.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -13,11 +13,13 @@
 **/
 #pragma once
 #include <windows.h>
+#ifdef D_DIRECTX
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include <xnamath.h>
 #include "resource.h"
+#endif
 
 
 /**
@@ -26,17 +28,17 @@
 **/
 struct DescSwapChain {
 	
-	UINT W;
-	UINT H;
+	unsigned int W;
+	unsigned int H;
 	HWND hWnd;
-	UINT numerator;
-	UINT denominator;
-	UINT BufferCount;
+	unsigned int numerator;
+	unsigned int denominator;
+	unsigned int BufferCount;
 	HWND OutputWindow;
-	BOOL Windowed;
-	UINT count;
-	UINT quality;
-	DXGI_FORMAT Format;
+	bool Windowed;
+	unsigned int count;
+	unsigned int quality;
+	short Format;
 };
 
 
@@ -76,14 +78,14 @@ public:
 	* @param	: UINT.
 	* @bug		: No Bugs known.
 	**/
-	void setWidth(UINT);
+	void setWidth(unsigned int);
 
 	/**
 	* @brief	: Setter the Height.
 	* @param	: UINT.
 	* @bug		: No Bugs known.
 	**/
-	void setHeight(UINT);
+	void setHeight(unsigned int);
 
 	/**
 	* @brief	: Short description of function.
@@ -93,22 +95,25 @@ public:
 	void setHwnd(HWND inHwnd);
 
 	/**
+	* @brief	: Getter the SwapChain DX.
+	* @bug		: No Bugs known.
+	**/
+	void *&getSwapC();
+
+#ifdef D_DIRECTX
+	/**
 	* @brief	: Getter the SwapChain Desc DX.
 	* @bug		: No Bugs known.
 	**/
 	DXGI_SWAP_CHAIN_DESC getSC();
-
-	/**
-	* @brief	: Getter the SwapChain DX.
-	* @bug		: No Bugs known.
-	**/
-	IDXGISwapChain *&getSwapC();
-
+#endif
 private:
-	IDXGISwapChain* SwapC;
-	DXGI_SWAP_CHAIN_DESC sd;
-	UINT W;
-	UINT H;
+	void * SwapC;
+	unsigned int W;
+	unsigned int H;
 	HWND hWnd;
 	DescSwapChain Desc;
+#ifdef D_DIRECTX
+	DXGI_SWAP_CHAIN_DESC sd;
+#endif
 };

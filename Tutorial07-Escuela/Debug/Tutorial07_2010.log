@@ -1,4 +1,10 @@
-﻿  Tutorial07.cpp
+﻿  CCamera.cpp
+e:\dev\v4\tutorial07\ccamera.cpp(192): warning C4244: '=': conversión de 'unsigned int' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\ccamera.cpp(193): warning C4244: '=': conversión de 'unsigned int' a 'float'; posible pérdida de datos
+  CCameraFP.cpp
+e:\dev\v4\tutorial07\ccamerafp.cpp(175): warning C4244: '=': conversión de 'unsigned int' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\ccamerafp.cpp(176): warning C4244: '=': conversión de 'unsigned int' a 'float'; posible pérdida de datos
+  Tutorial07.cpp
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(12): warning C4005: 'DXGI_STATUS_OCCLUDED': redefinición de macro
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\winerror.h(55460): note: vea la definición anterior de 'DXGI_STATUS_OCCLUDED'
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(13): warning C4005: 'DXGI_STATUS_CLIPPED': redefinición de macro
@@ -93,18 +99,20 @@ c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathconvert.
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathvector.inl(1269): warning C4838: la conversión de 'unsigned int' en 'INT' requiere una conversión de restricción
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(518): warning C4838: la conversión de 'unsigned int' en 'INT' requiere una conversión de restricción
 c:\program files (x86)\microsoft directx sdk (june 2010)\include\xnamathmisc.inl(519): warning C4838: la conversión de 'unsigned int' en 'INT' requiere una conversión de restricción
-e:\dev\v4\tutorial07\tutorial07.cpp(273): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(313): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(329): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(345): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(437): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(473): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(488): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(494): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(500): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(521): warning C4238: se ha utilizado una extensión no estándar: valor-R de clase utilizado como valor L
-e:\dev\v4\tutorial07\tutorial07.cpp(528): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
-e:\dev\v4\tutorial07\tutorial07.cpp(529): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
-e:\dev\v4\tutorial07\tutorial07.cpp(594): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
-e:\dev\v4\tutorial07\tutorial07.cpp(595): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
-  Tutorial07_2010.vcxproj -> E:\Dev\v4\Tutorial07\Debug\Tutorial07.exe
+e:\dev\v4\tutorial07\tutorial07.cpp(213): warning C4100: 'ppBlobOut': parámetro formal sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(213): warning C4100: 'szShaderModel': parámetro formal sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(213): warning C4100: 'szEntryPoint': parámetro formal sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(213): warning C4100: 'szFileName': parámetro formal sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(214): warning C4189: 'hr': la variable local se ha inicializado pero no se hace referencia a ella
+e:\dev\v4\tutorial07\tutorial07.cpp(604): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\tutorial07.cpp(605): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\tutorial07.cpp(611): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\tutorial07.cpp(612): warning C4244: '=': conversión de 'LONG' a 'float'; posible pérdida de datos
+e:\dev\v4\tutorial07\tutorial07.cpp(687): warning C4459: la declaración de 'DescUI' oculta la declaración global
+  e:\dev\v4\tutorial07\tutorial07.cpp(118): note: vea la declaración de 'DescUI'
+e:\dev\v4\tutorial07\tutorial07.cpp(491): warning C4189: 'offset': la variable local se ha inicializado pero no se hace referencia a ella
+e:\dev\v4\tutorial07\tutorial07.cpp(354): warning C4101: 'DescDSV': variable local sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(325): warning C4101: 'TextureDesc': variable local sin referencia
+e:\dev\v4\tutorial07\tutorial07.cpp(490): warning C4189: 'stride': la variable local se ha inicializado pero no se hace referencia a ella
+  Generando código...
+  Tutorial07_2010.vcxproj -> E:\Dev\v4\Tutorial07\\bin\x86\Debug\Tutorial07.exe

@@ -1,5 +1,5 @@
 /**
-* @LC		: 12/02/2020
+* @LC		: 24/02/2020
 * @file		: CVertexBuffer.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -20,12 +20,10 @@ CVertexBuffer::CVertexBuffer() {
 
 }
 
-
 CVertexBuffer::~CVertexBuffer() {
 
 
 }
-
 
 int CVertexBuffer::init(DescBuffer inDesc) {
 	VertexBD = inDesc;
@@ -35,11 +33,12 @@ int CVertexBuffer::init(DescBuffer inDesc) {
 	return 0;
 }
 
-
+#ifdef D_DIRECTX
 D3D11_BUFFER_DESC CVertexBuffer::getBD() {
 	return OrigBuffer.getBD();
 }
+#endif
 
-ID3D11Buffer *& CVertexBuffer::getB() {
+void *& CVertexBuffer::getB() {
 	return OrigBuffer.getDX11Buffer();
 }

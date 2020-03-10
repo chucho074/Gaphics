@@ -1,5 +1,5 @@
 /**
-* @LC		: 19/02/2020
+* @LC		: 24/02/2020
 * @file		: CPixelShader.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -15,8 +15,8 @@
 
 
 CPixelShader::CPixelShader() {
-	PS = NULL;
-	PS_Blob = NULL;
+	PS = nullptr;
+	PS_Blob = nullptr;
 
 }
 
@@ -27,11 +27,11 @@ CPixelShader::~CPixelShader() {
 }
 
 
-ID3D11PixelShader *& CPixelShader::getPS() {
+void *& CPixelShader::getPS() {
 	return PS;
 }
 
 
-ID3DBlob *& CPixelShader::getPSBlob() {
+void *& CPixelShader::getPSBlob() {
 	return PS_Blob;
 }

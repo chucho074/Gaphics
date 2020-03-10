@@ -1,6 +1,6 @@
 /**
-* @LC		: 17/02/2020
-* @file		: CRenderTargetView.h
+* @LC		: 24/02/2020
+* @file		: CRenderTarget.h
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: 16/02/2020
@@ -27,6 +27,6 @@ CRenderTarget::~CRenderTarget() {
 }
 
 
-ID3D11Texture2D *& CRenderTarget::getBB() {
+void *& CRenderTarget::getBB() {
 	return BackBuffer->getDXTexture();
 }

@@ -1,5 +1,5 @@
 /**
-* @LC		: 19/02/2020
+* @LC		: 24/02/2020
 * @file		: CInputLayout.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -15,7 +15,7 @@
 
 
 CInputLayout::CInputLayout() {
-	IL = NULL;
+	IL = nullptr;
 }
 
 
@@ -24,7 +24,7 @@ CInputLayout::~CInputLayout() {
 }
 
 
-ID3D11InputLayout *& CInputLayout::getIL() {
+void *& CInputLayout::getIL() {
 
 	return IL;
 }

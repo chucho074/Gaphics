@@ -1,5 +1,5 @@
 /**
-* @LC		: 07/02/2020
+* @LC		: 24/02/2020
 * @file		: CIndexBuffer.cpp
 * @Author	: Jesús Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
@@ -20,12 +20,10 @@ CIndexBuffer::CIndexBuffer() {
 
 }
 
-
 CIndexBuffer::~CIndexBuffer() {
 
 
 }
-
 
 int CIndexBuffer::init(DescBuffer inDesc) {
 	IndexDB = inDesc;
@@ -35,11 +33,12 @@ int CIndexBuffer::init(DescBuffer inDesc) {
 	return 0;
 }
 
-
+#ifdef D_DIRECTX
 D3D11_BUFFER_DESC CIndexBuffer::getBD() {
 	return OrigBuffer.getBD();
 }
+#endif
 
-ID3D11Buffer *&CIndexBuffer::getB() {
+void *&CIndexBuffer::getB() {
 	return OrigBuffer.getDX11Buffer();
 }
