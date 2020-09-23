@@ -6,7 +6,7 @@
 /**
 * @LC		: Day/Month/Year
 * @file		: example.cpp
-* @Author	: Jesús Alberto Del Moral Cupil
+* @Author	: JesÃºs Alberto Del Moral Cupil
 * @Email	: idv18c.jmoral@uartesdigitales.edu.mx
 * @date		: Day/Month/Year
 * @brief	: A basic description of the what do the doc.
